@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Earth Trek - Climate Change Info</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&family=Space+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-color: #4cc9f0;
+        --secondary-color: #f72585;
+        --text-color: #ffffff;
+        --background-color: #000000;
+      }
+
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        font-family: "Roboto", sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        overflow-x: hidden;
+      }
+
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        font-family: "Roboto", sans-serif;
+        background: url("https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3540&q=80")
+          no-repeat center center fixed;
+        background-size: cover;
+        color: var(--text-color);
+        overflow-x: hidden;
+        animation: moveBackground 30s linear infinite;
+      }
+
+      @keyframes moveBackground {
+        0% {
+          background-position: 0 0;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0 100%;
+        }
+      }
+
+      .space-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background: url("https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3540&q=80")
+          no-repeat center center;
+        background-size: cover;
+        animation: spaceMove 60s linear infinite;
+      }
+
+      @keyframes spaceMove {
+        0% {
+          background-position: 0 0;
+        }
+        100% {
+          background-position: 100% 100%;
+        }
+      }
+
+      header {
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 1rem;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 10001;
+        transition: background-color 0.3s ease;
+      }
+
+      header.scrolled {
+        background-color: rgba(0, 0, 0, 0.9);
+      }
+
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      header.expanded {
+        display: none;
+      }
+
+      nav ul {
+        list-style-type: none;
+        display: flex;
+        gap: 2rem;
+        padding: 0;
+      }
+
+      nav a {
+        color: var(--text-color);
+        text-decoration: none;
+        transition: color 0.3s;
+        font-family: "Space Mono", monospace;
+        font-size: 1.1rem;
+      }
+
+      nav a:hover {
+        color: var(--primary-color);
+      }
+
+      main {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 2rem 2rem;
+      }
+
+      section {
+        border-radius: 15px;
+        padding: 3rem;
+        margin-bottom: 3rem;
+        backdrop-filter: blur(10px);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(76, 201, 240, 0.3);
+      }
+
+      h1,
+      h2 {
+        font-family: "Orbitron", sans-serif;
+        color: var(--primary-color);
+      }
+
+      .hero {
+        text-align: center;
+        padding: 8rem 0;
+        height: 50vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .hero h1 {
+        font-size: 8rem;
+        margin-bottom: 1rem;
+        text-shadow: 0 0 10px var(--primary-color);
+        animation: glow 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes glow {
+        from {
+          text-shadow: 0 0 5px var(--primary-color),
+            0 0 10px var(--primary-color);
+        }
+        to {
+          text-shadow: 0 0 10px var(--primary-color),
+            0 0 20px var(--primary-color), 0 0 30px var(--primary-color);
+        }
+      }
+
+      .explore-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 2rem;
+      }
+
+      .explore-buttons button {
+        padding: 1rem 2rem;
+        background-color: var(--primary-color);
+        border: none;
+        border-radius: 50px;
+        color: var(--background-color);
+        cursor: pointer;
+        font-size: 1.1rem;
+        font-family: "Space Mono", monospace;
+        transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      }
+
+      .explore-buttons button:hover {
+        background-color: var(--secondary-color);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(247, 37, 133, 0.4);
+      }
+
+      .user-list {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 30px;
+      }
+
+      .user {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 30px;
+        width: calc(33.333% - 30px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+        box-sizing: border-box;
+        text-align: center;
+        backdrop-filter: blur(5px);
+      }
+
+      .user:hover {
+        transform: translateY(-10px) rotateY(10deg);
+        box-shadow: 0 15px 30px rgba(76, 201, 240, 0.3);
+      }
+
+      .user img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        margin-bottom: 20px;
+        border: 3px solid var(--primary-color);
+        transition: transform 0.3s ease;
+      }
+
+      .user:hover img {
+        transform: scale(1.1);
+      }
+
+      .user span {
+        display: block;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        font-family: "Orbitron", sans-serif;
+        color: var(--primary-color);
+      }
+
+      .linkedin-icon {
+        width: 30px;
+        height: 30px;
+        transition: transform 0.3s;
+      }
+
+      .user a:hover .linkedin-icon {
+        transform: scale(1.2) rotate(360deg);
+      }
+
+      footer {
+        background-color: rgba(0, 0, 0, 0.8);
+        padding: 2rem;
+        color: var(--text-color);
+        text-align: center;
+        font-family: "Space Mono", monospace;
+      }
+
+      footer a {
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: color 0.3s;
+      }
+
+      footer a:hover {
+        color: var(--secondary-color);
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        .user {
+          width: calc(50% - 30px);
+        }
+
+        .hero h1 {
+          font-size: 3rem;
+        }
+
+        nav ul {
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .user {
+          width: 100%;
+        }
+
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+
+        .explore-buttons {
+          flex-direction: column;
+        }
+
+        section {
+          padding: 2rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="space-background"></div>
+
+    <header id="header">
+      <nav>
+        <ul style="margin: auto">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+        <style>
+            .hero {
+              position: relative;
+              padding: 0;
+              height: 75vh;
+              width: 100%;
+              margin: 1rem 0;
+              transition: all 0.3s ease-out;
+              transform-origin: center center;
+              overflow: hidden;
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+              border-radius: 8px;
+            }
+            
+            .hero.fixed {
+              width: 100%;
+              height: 100%;
+              position: fixed;
+              z-index: 999;
+              top: 0;
+              left: 0;
+              margin: 0;
+              padding: 0;
+              border-radius: 0;
+              box-shadow: none;
+              transition: all 0.7s ease-out;
+            }
+            
+            .frame {
+              width: 100%;
+              height: 100%;
+              border: 0;
+              display: block;
+            }
+            
+            /* Wrapper - only visible on hover */
+            .hero > .wrapper {
+              width: 100%;
+              height: 100%;
+              position: absolute;
+              top: 0;
+              left: 0;
+              opacity: 0;
+              transition: opacity 0.3s ease;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              background: rgba(0, 0, 0, 0.3);
+              cursor: pointer;
+              pointer-events: none;
+            }
+            
+            .hero:not(.fixed):hover > .wrapper {
+              opacity: 1;
+              pointer-events: auto;
+            }
+            
+            /* Explore Button (text only) */
+            .wrapper button {
+              padding: 14px 32px;
+              font-size: 1.2rem;
+              font-weight: 600;
+              color: #fff;
+              background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+              border: none;
+              border-radius: 50px;
+              cursor: pointer;
+              box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+              transition: all 0.3s ease;
+            }
+            
+            .wrapper button:hover {
+              transform: translateY(-3px);
+              box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+              background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            }
+            
+            /* Close Button with CDN SVG */
+            .close {
+              display: none;
+              position: absolute;
+              top: 25px;
+              right: 25px;
+              background: rgba(255, 255, 255, 0.95);
+              border: none;
+              width: 44px;
+              height: 44px;
+              border-radius: 50%;
+              cursor: pointer;
+              z-index: 1000;
+              box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+              transition: all 0.3s ease;
+            }
+            
+            .hero.fixed > .close {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            
+            .close:hover {
+              transform: scale(1.1);
+              background: rgba(255, 255, 255, 1);
+            }
+            
+            .close img {
+              width: 20px;
+              height: 20px;
+              pointer-events: none;
+            }
+            
+            .prevent-scroll {
+              overflow: hidden;
+            }
+          </style>
+      <script>
+        function expand() {
+          document.querySelector(".hero").classList.add("fixed");
+          document.querySelector("body").classList.add("prevent-scroll");
+          document.querySelector("html").classList.add("prevent-scroll");
+          document.querySelector("header").classList.add("expanded");
+          const iframe = document.querySelector(".hero iframe");
+          iframe.src = "./explore?expanded=true";
+        }
+
+        function shrink() {
+          document.querySelector(".hero").classList.remove("fixed");
+          document.querySelector("body").classList.remove("prevent-scroll");
+          document.querySelector("html").classList.remove("prevent-scroll");
+          document.querySelector("header").classList.remove("expanded");
+          const iframe = document.querySelector(".hero iframe");
+          iframe.src = "./explore?expanded=false";
+        }
+      </script>
+      <section class="hero">
+        <!-- <h1>EARTH TREK</h1>
+            <p>Exploring Our Changing Planet</p> -->
+        <iframe class="frame" src="./explore"></iframe>
+        <button class="close" onclick="shrink()" aria-label="Close">
+            <img src="https://img.icons8.com/?size=100&id=8112&format=png&color=000000" alt="Close">
+          </button>
+                <div class="wrapper">
+          <button onclick="expand()">Explore</button>
+        </div>
+      </section>
+
+      <section id="overview">
+        <h2>Climate Change Overview</h2>
+        <p>
+          From 1980 to 2024, climate change has manifested through significant
+          and observable shifts in weather patterns and environmental conditions
+          worldwide. Global temperatures have risen dramatically, with the last
+          four decades marking some of the hottest years on record. The
+          Intergovernmental Panel on Climate Change (IPCC) has reported that the
+          average global temperature has increased by approximately 1.2 degrees
+          Celsius since the late 19th century, a trend that is largely
+          attributed to human-induced greenhouse gas emissions. One of the most
+          alarming changes has been the increase in extreme weather events.
+          Heatwaves, hurricanes, floods, and wildfires have become more frequent
+          and intense, causing widespread destruction and loss of life. Melting
+          ice caps and glaciers contribute to rising sea levels, threatening
+          coastal communities and ecosystems. Additionally, shifts in
+          precipitation patterns have led to droughts in some regions while
+          causing excessive rainfall in others, disrupting agriculture and water
+          supplies. Biodiversity is also at risk, with many species struggling
+          to adapt to rapidly changing habitats. The urgent need for mitigation
+          and adaptation strategies has been recognized globally, leading to
+          international agreements like the Paris Agreement aimed at limiting
+          temperature rises and reducing carbon emissions to combat climate
+          change effectively.
+        </p>
+        <div class="explore-buttons">
+          <a href="{{ url_for('explore') }}">
+            <button>Explore Earth</button>
+          </a>
+          <a href="{{ url_for('quiz') }}">
+            <button>Explore Quiz</button>
+          </a>
+          <a href="{{ url_for('blog') }}">
+            <button>Explore Blogs</button>
+          </a>
+          <a href="{{ url_for('game') }}">
+            <button>Explore Games</button>
+          </a>
+        </div>
+      </section>
+
+      <section id="about">
+        <h2>About Us</h2>
+        <p>
+          Our mission is to provide accurate, up-to-date information on the
+          global impacts of climate change. We are dedicated to raising
+          awareness and promoting sustainable solutions to address this critical
+          issue.
+        </p>
+      </section>
+
+      <section id="contact">
+        <h2>Contact Our Team</h2>
+        <ul class="user-list">
+          <li class="user">
+            <span>Harshdeep Joshi</span>
+            <a
+              href="https://www.linkedin.com/in/amanbani"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="https://img.icons8.com/fluent/48/000000/linkedin.png"
+                alt="LinkedIn"
+                class="linkedin-icon"
+              />
+            </a>
+          </li>
+          <li class="user">
+            <span>Harshit Rajput</span>
+            <a
+              href="https://www.linkedin.com/in/janesmith"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="https://img.icons8.com/fluent/48/000000/linkedin.png"
+                alt="LinkedIn"
+                class="linkedin-icon"
+              />
+            </a>
+          </li>
+          <li class="user">
+            <span>Himanshu Agrawal</span>
+            <a
+              href="https://www.linkedin.com/in/johndoe"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="https://img.icons8.com/fluent/48/000000/linkedin.png"
+                alt="LinkedIn"
+                class="linkedin-icon"
+              />
+            </a>
+          </li>
+          <li class="user">
+            <span>Aman Bani</span>
+            <a
+              href="https://www.linkedin.com/in/johndoe"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="https://img.icons8.com/fluent/48/000000/linkedin.png"
+                alt="LinkedIn"
+                class="linkedin-icon"
+              />
+            </a>
+          </li>
+          <li class="user">
+            <span>Abhilasha Bisht</span>
+            <a
+              href="https://www.linkedin.com/in/johndoe"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="https://img.icons8.com/fluent/48/000000/linkedin.png"
+                alt="LinkedIn"
+                class="linkedin-icon"
+              />
+            </a>
+          </li>
+          <li class="user">
+            <span>Rashmi Murari</span>
+            <a
+              href="https://www.linkedin.com/in/johndoe"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="https://img.icons8.com/fluent/48/000000/linkedin.png"
+                alt="LinkedIn"
+                class="linkedin-icon"
+              />
+            </a>
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>© 2024 Earth Trek | All Rights Reserved</p>
+      <p>
+        Check out our research papers:
+        <a
+          href="https://www.climatereports.org"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Climate Reports</a
+        >,
+        <a
+          href="https://www.nature.com/climate"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Nature Climate</a
+        >
+      </p>
+    </footer>
+    <script>
+      const timeline = document.querySelector(".timeline");
+      const timelineContainer = document.querySelector(".timeline-container");
+      const yearDisplay = document.getElementById("yearDisplay");
+      const selector = document.querySelector(".selector");
+
+      let currentYear = 2011; // Initial current year
+      let startYear = 1967; // Initialize to 0, will be set dynamically
+      let endYear = 0; // Initialize to 0, will be set dynamically
+      const yearWidth = 120; // Width of each year marker in pixels
+      let isDragging = false;
+      let startX, scrollLeft;
+      let lastDragTime = 0;
+      const dragThrottle = 50; // Minimum time between drag updates in milliseconds
+
+      // Function to load available textures and extract years
+      async function loadAvailableTextures(folderPath) {
+        const response = await fetch(folderPath);
+        const text = await response.text(); // Assume it returns a list of filenames
+
+        // Extract year from filenames (assuming filenames like 'smudge_effect_year_1967.png')
+        const textureFiles = text.match(/smudge_effect_year_\d{4}\.png/g);
+        const years = [];
+
+        textureFiles.forEach((file) => {
+          const year = parseInt(file.match(/\d{4}/)[0]);
+          years.push(year);
+
+          // Update start and end year based on available years
+          startYear = Math.min(startYear, year);
+          endYear = Math.max(endYear, year);
+        });
+
+        return years; // Return the available years
+      }
+
+      function createYearMarkers() {
+        timeline.innerHTML = "";
+        const totalWidth = yearWidth * (endYear - startYear + 1);
+        timeline.style.width = `${totalWidth}px`;
+
+        for (let year = startYear; year <= endYear; year++) {
+          const marker = document.createElement("div");
+          marker.className = "year-marker";
+          marker.style.left = `${
+            (year - startYear) * yearWidth + yearWidth / 2
+          }px`;
+          marker.textContent = year;
+          timeline.appendChild(marker);
+        }
+      }
+
+      function updateTimeline(smooth = true) {
+        const offset = (currentYear - startYear) * yearWidth;
+        timeline.style.transition = smooth
+          ? "transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)"
+          : "none";
+        timeline.style.transform = `translateX(${
+          -offset + timelineContainer.offsetWidth / 2 - yearWidth / 2
+        }px)`;
+        yearDisplay.textContent = Math.round(currentYear);
+
+        document.querySelectorAll(".year-marker").forEach((marker) => {
+          marker.classList.remove("active");
+          if (parseInt(marker.textContent) === Math.round(currentYear)) {
+            marker.classList.add("active");
+          }
+        });
+        function updateDropdownValue(year) {
+          const dropdown = document.getElementById("yearDropdown");
+
+          try {
+            if (dropdown) {
+              // Ensure the year is within the dropdown's range
+              if (year >= 1967 && year <= 2023) {
+                dropdown.value = year; // Set the dropdown value
+                const event = new Event("change", { bubbles: true });
+                dropdown.dispatchEvent(event);
+              } else {
+                console.error(`Year ${year} is out of range.`);
+              }
+            } else {
+              console.error("Dropdown element not found.");
+            }
+          } catch (error) {
+            console.error("Error updating dropdown value:", error);
+          }
+        }
+
+        // Call setCurrentYear to update the visualization
+        console.log(Math.round(currentYear));
+
+        // Update the dropdown with the current year
+        updateDropdownValue(Math.round(currentYear));
+
+        // Add a pulsing effect to the selector
+        selector.style.transform = "translate(-50%, -50%) scale(1.1)";
+        setTimeout(() => {
+          selector.style.transform = "translate(-50%, -50%) scale(1)";
+        }, 150);
+      }
+
+      function handleDragStart(e) {
+        isDragging = true;
+        startX = e.type.includes("mouse") ? e.pageX : e.touches[0].pageX;
+        scrollLeft = timeline.scrollLeft;
+        timelineContainer.style.cursor = "grabbing";
+      }
+
+      function handleDragEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        timelineContainer.style.cursor = "grab";
+
+        // Snap to the nearest year
+        currentYear = Math.round(currentYear);
+        updateTimeline(true);
+      }
+
+      function handleDrag(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+
+        const currentTime = Date.now();
+        if (currentTime - lastDragTime < dragThrottle) return;
+        lastDragTime = currentTime;
+
+        const x = e.type.includes("mouse") ? e.pageX : e.touches[0].pageX;
+        const walk = (startX - x) / (yearWidth * 2); // Decreased sensitivity
+        let newYear = currentYear + walk;
+
+        // Clamp the year between start and end years
+        newYear = Math.max(startYear, Math.min(endYear, newYear));
+
+        if (newYear !== currentYear) {
+          currentYear = newYear;
+          updateTimeline(false);
+        }
+      }
+
+      timelineContainer.addEventListener("mousedown", handleDragStart);
+      timelineContainer.addEventListener("touchstart", handleDragStart);
+      window.addEventListener("mouseup", handleDragEnd);
+      window.addEventListener("touchend", handleDragEnd);
+      window.addEventListener("mousemove", handleDrag);
+      window.addEventListener("touchmove", handleDrag);
+
+      // Initialize timeline by loading available textures
+      loadAvailableTextures("output_images") // Replace with your actual folder path
+        .then(() => {
+          createYearMarkers(); // Create year markers based on loaded textures
+          updateTimeline(); // Update the timeline display
+        });
+      // Add resize event listener to keep the timeline centered
+      window.addEventListener("resize", () => updateTimeline());
+    </script>
+  </body>
+</html>
