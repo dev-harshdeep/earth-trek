@@ -14,7 +14,6 @@
         margin: 0;
         background-color: #000;
         color: #fff;
-        background-image: url("https://hebbkx1anhila5yf.public.blob.vercel-storage.com/stars-background-KQITxHGTHCeWHMJQPxfIVGKQBBxMxp.jpg");
         background-size: cover;
         background-position: center;
         overflow: hidden;
@@ -102,7 +101,6 @@
         transform: translate(-50%, -50%);
         width: 60px;
         height: 60px;
-        background: url("https://hebbkx1anhila5yf.public.blob.vercel-storage.com/moon-thumb-hhXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.png");
         background-size: cover;
         border-radius: 50%;
         box-shadow: 0 0 20px rgba(77, 184, 255, 0.8);
@@ -308,10 +306,7 @@
     </script>
   </head>
   <body>
-    <script
-      type="module"
-      src="{{ url_for('static', filename='index.js') }}"
-    ></script>
+    <script type="module" src="../static/index.js"></script>
 
     <div id="left">
       <div class="dd">
@@ -323,24 +318,25 @@
         
 
         <iframe
-          id="art"
-          src="{{ url_for('articles', year=2011) }}"
-          title="Embedded Page"
-          scrolling="auto"
-        ></iframe>
-      </div>
+        id="art"
+        src="./articles.html?year=2011" 
+        title="Embedded Page"
+        scrolling="auto"
+      ></iframe>
+            </div>
     </div>
     <div id="right">
  
 
     <div class="chatbotdata"> 
 
-      
-            <iframe
-              src="{{ url_for('static', filename='chatbot.html') }}"
-              title="Embedded Page"
-              scrolling="auto"
-            ></iframe>
+      <!-- 
+        <iframe
+        src="{{ url_for('static', filename='chatbot.html') }}"
+        title="Embedded Page"
+        scrolling="auto"
+        ></iframe>
+        -->
     </div>
     </div>
     <div id="bottom">
@@ -368,12 +364,21 @@ document.addEventListener('DOMContentLoaded', function() {
   // Function to check URL and toggle elements
   function updateElementsBasedOnURL() {
     const urlParams = new URLSearchParams(window.location.search);
-    const isExpanded = urlParams.get('expanded') === 'true';
-    
-    // Toggle elements visibility
-    elementsToHide.forEach(el => {
-      el.style.display = isExpanded ? '' : 'none';
-    });
+
+
+    let isExpanded = urlParams.get('expanded') ;
+    if (isExpanded===null) {
+      elementsToHide.forEach(el => { 
+        el.style.display =  '';
+      });
+  } else {
+    isExpanded = isExpanded === 'true';
+      elementsToHide.forEach(el => {
+          console.log('isExpanded', isExpanded);
+          el.style.display = isExpanded ? '' : 'none';
+      });
+  }
+
   }
 
   // 1. Check immediately on load
@@ -408,7 +413,9 @@ document.addEventListener('DOMContentLoaded', function() {
       const yearDisplay = document.getElementById("yearDisplay");
       const selector = document.querySelector(".selector");
 
-      let currentYear = 2011; // Initial current year
+      const actualCurrentYear = new Date().getFullYear();
+
+      const currentYear = Math.min(actualCurrentYear, 2035);
       let startYear = 1967; // Initialize to 0, will be set dynamically
       let endYear = 0; // Initialize to 0, will be set dynamically
       const yearWidth = 120; // Width of each year marker in pixels
@@ -418,25 +425,37 @@ document.addEventListener('DOMContentLoaded', function() {
       const dragThrottle = 50; // Minimum time between drag updates in milliseconds
 
       // Function to load available textures and extract years
-      async function loadAvailableTextures(folderPath) {
-        const response = await fetch("/api/textures"); // Fetch from the new endpoint
-        const text = await response.text(); // Assume it returns a list of filenames
-
-        // Extract year from filenames (assuming filenames like 'smudge_effect_year_1967.png')
-        const textureFiles = text.match(/smudge_effect_year_\d{4}\.png/g);
-        const years = [];
-
-        textureFiles.forEach((file) => {
-          const year = parseInt(file.match(/\d{4}/)[0]);
-          years.push(year);
-
-          // Update start and end year based on available years
-          startYear = Math.min(startYear, year);
-          endYear = Math.max(endYear, year);
-        });
-
-        return years; // Return the available years
-      }
+      async function loadAvailableTextures() {
+        const folderPath = '../static/output_images'; // Relative path to your textures
+        try {
+            // This assumes your static files are served and can be listed via directory indexing
+            const response = await fetch(folderPath);
+            const html = await response.text();
+            
+            // Parse the directory listing HTML to extract filenames
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const links = doc.querySelectorAll('a[href$=".png"]');
+            
+            const years = [];
+            links.forEach(link => {
+                const file = link.getAttribute('href');
+                if (file.includes('smudge_effect_year_')) {
+                    const year = parseInt(file.match(/\d{4}/)[0]);
+                    years.push(year);
+                    
+                    // Update start and end year based on available years
+                    startYear = Math.min(startYear, year);
+                    endYear = Math.max(endYear, year);
+                }
+            });
+            
+            return years;
+        } catch (error) {
+            console.error("Error loading textures:", error);
+            return [];
+        }
+    }
 
       function createYearMarkers() {
         timeline.innerHTML = "";

@@ -9,27 +9,73 @@ let textures = {};
 let currentYear = ''; 
 
 async function loadAvailableTextures() {
-    const folderPath = "./static/output_images"; 
-    const response = await fetch("/api/textures"); 
-    const textureFiles = await response.json(); 
-    const availableYears = [];
-    // const textures = {};
-
+    const textureFolder = '../static/output_images/';
     
-    textureFiles.forEach(file => {
-        const year = file.match(/\d{4}/)[0];
-        availableYears.push(year);
-
+    try {
+        // Try dynamic loading first
+        const response = await fetch(textureFolder);
+        if (!response.ok) throw new Error('Directory listing not available');
         
-        const textureURL = `${folderPath}/${file}`; 
-        const texture = new THREE.TextureLoader().load(textureURL);
-        textures[year] = texture; 
-    });
-
-    
-    populateDropdown(availableYears);
+        const html = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        
+        // Extract PNG files with the smudge effect pattern
+        const textureFiles = [...doc.querySelectorAll('a')]
+            .map(a => a.href)
+            .filter(href => href.includes('smudge_effect_year_'))
+            .map(href => href.split('/').pop());
+        
+        if (textureFiles.length > 0) {
+            await loadAndProcessTextures(textureFiles, textureFolder);
+            return;
+        }
+        throw new Error('No texture files found');
+    } catch (error) {
+        console.warn("Dynamic loading failed, using fallback:", error);
+        // Fallback to all years from 1967 to 2035
+        const fallbackFiles = generateAllYearTextures(1967, 2035);
+        await loadAndProcessTextures(fallbackFiles, textureFolder);
+    }
 }
 
+// Helper function to generate filenames for all years in range
+function generateAllYearTextures(startYear, endYear) {
+    const files = [];
+    for (let year = startYear; year <= endYear; year++) {
+        files.push(`smudge_effect_year_${year}.png`);
+    }
+    return files;
+}
+
+// Shared texture loading logic
+async function loadAndProcessTextures(fileList, basePath) {
+    const availableYears = [];
+    
+    await Promise.all(fileList.map(async (file) => {
+        const year = file.match(/\d{4}/)?.[0];
+        if (!year) return;
+        
+        const textureURL = `${basePath}${file}`;
+        try {
+            const texture = await new Promise((resolve, reject) => {
+                new THREE.TextureLoader().load(
+                    textureURL,
+                    resolve,
+                    undefined,
+                    () => reject(new Error(`Failed to load ${file}`))
+                );
+            });
+            
+            availableYears.push(parseInt(year));
+            textures[year] = texture;
+        } catch (error) {
+            console.warn(`Skipping ${file}:`, error.message);
+        }
+    }));
+    
+    populateDropdown(availableYears.sort((a, b) => a - b));
+}
 
 loadAvailableTextures();
 
@@ -67,7 +113,7 @@ function setCurrentYear(year) {
  
 function loadTextureForYear(year) {
     const dayTexture = textures[year]; 
-    const nightTexture = textures[`night_${year}`];  
+    // const nightTexture = textures[`night_${year}`];  
  
     if (dayTexture) {
         dayEarthMesh.material.map = dayTexture;
@@ -77,12 +123,12 @@ function loadTextureForYear(year) {
     }
 
     // Update the night texture
-    if (nightTexture) {
-        nightMaterial.map = nightTexture; // Update the night texture
-        nightMaterial.needsUpdate = true; // Ensure material is updated
-    } else {
-        console.error(`No night texture found for year ${year}`);
-    }
+    // if (nightTexture) {
+    //     nightMaterial.map = nightTexture; // Update the night texture
+    //     nightMaterial.needsUpdate = true; // Ensure material is updated
+    // } else {
+    //     console.error(`No night texture found for year ${year}`);
+    // }
 }
 
 
@@ -114,14 +160,13 @@ const geometry = new THREE.SphereGeometry(1, 32, 32);
 
 // Load textures for day, night, and clouds
 const textureLoader = new THREE.TextureLoader();
-const dayTexture = textureLoader.load('./static/2k_earth_daymap.jpg'); 
-const nightTexture = textureLoader.load('./static/8k_earth_nightmap.jpg'); 
-const cloudTexture = textureLoader.load('./static/04_earthcloudmap.jpg'); // Cloud texture
+const dayTexture = textureLoader.load('../static/2k_earth_daymap.jpg'); 
+const nightTexture = textureLoader.load('../static/8k_earth_nightmap.jpg'); 
+const cloudTexture = textureLoader.load('../static/04_earthcloudmap.jpg'); // Cloud texture
 
  const dayMaterial = new THREE.MeshPhongMaterial({
     map: dayTexture, 
-    specularMap: textureLoader.load('./static/02_earthspec1k.jpg'),
-    displacementMap: textureLoader.load('./static/your_height_map.jpg'), 
+    specularMap: textureLoader.load('../static/02_earthspec1k.jpg'),
     displacementScale: 0.05, 
     opacity: 1 
 
@@ -234,6 +279,6 @@ function animate() {
 
  
 loadAvailableTextures('.static/output_images'); 
-loadCSV('processed_data.csv');  
+loadCSV('../static/processed_data.csv');  
 
 animate();

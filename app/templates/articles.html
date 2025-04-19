@@ -226,123 +226,211 @@
 </head>
 <body>
     <div class="carousel-container">
-        
+        <h1 class="carousel-title" id="year-title">Space Articles</h1>
         <button class="button left" onclick="prevSlide()">&#10094;</button>
         <div class="carousel" id="carousel">
-            {% for article in articles %}
-            <div class="card">
-                <div class="card-image-container">
-                    <img src="/static/{{ article['Image Filename'] }}" alt="{{ article['Title'] }}">
-                </div>
-                <div class="card-content">
-                    <h3>{{ article['Title'] }}</h3>
-                    <p class="authors">{{ article['Authors'] }}</p>
-                    <p class="pubdate"><strong>Publication Date:</strong> {{ article['Publication Date'] }}</p>
-                    <p>{{ article['Description'].split(' ')[:20] | join(' ') }}...</p>
-                    <a href="{{ article['URL'] }}" class="explore-btn" target="_blank">Explore More</a>
-                </div>
-            </div>
-            {% endfor %}
+            <!-- Articles will be inserted here by JavaScript -->
         </div>
         <button class="button right" onclick="nextSlide()">&#10095;</button>
-        
-        <div class="indicators" id="indicators">
-            {% for article in articles %}
-            <div class="indicator {% if loop.first %}active{% endif %}" onclick="goToSlide({{ loop.index0 }})"></div>
-            {% endfor %}
+        <div class="indicators" id="indicators"></div>
+        <div id="loading-message">Loading articles...</div>
+        <div id="error-message" style="display: none; color: #ff6b6b; text-align: center; margin-top: 20px;">
+            Failed to load articles. Please try again later.
         </div>
     </div>
 
     <script>
-        const carousel = document.getElementById('carousel');
-        const indicators = document.getElementById('indicators').children;
-        let currentIndex = 0;
-        const cardWidth = 330; // card width + margin
-        const visibleCards = Math.floor(carousel.offsetWidth / cardWidth);
+        // Configuration - update these paths if needed
+        const ARTICLES_BASE_PATH = '../static/nature_articles/';
+        const IMAGES_BASE_PATH = '../static/nature_articles/';
         
+        // Carousel state
+        let currentIndex = 0;
+        let cardWidth = 330; // Will be updated on init
+        let visibleCards = 3; // Will be updated on init
+        
+        // DOM Elements
+        const carousel = document.getElementById('carousel');
+        const indicators = document.getElementById('indicators');
+        const yearTitle = document.getElementById('year-title');
+        const loadingMessage = document.getElementById('loading-message');
+        const errorMessage = document.getElementById('error-message');
+
+        // Load articles when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadArticles();
+            window.addEventListener('resize', updateCarouselMetrics);
+        });
+
+        async function loadArticles() {
+            loadingMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+            carousel.innerHTML = '';
+            indicators.innerHTML = '';
+            
+            const year = getYearFromUrl();
+            yearTitle.textContent = `Space Articles ${year}`;
+            
+            try {
+                const csvData = await fetchCsv(year);
+                const articles = parseCsv(csvData);
+                
+                if (articles.length === 0) {
+                    throw new Error('No articles found');
+                }
+                
+                renderArticles(articles, year);
+                initCarousel();
+            } catch (error) {
+                console.error("Error loading articles:", error);
+                showError();
+            } finally {
+                loadingMessage.style.display = 'none';
+            }
+        }
+
+        function getYearFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            let year = parseInt(params.get('year')) || 2011;
+            // Clamp between 2011-2035
+            return Math.min(Math.max(year, 2011), 2035);
+        }
+
+        async function fetchCsv(year) {
+            const response = await fetch(`${ARTICLES_BASE_PATH}articles_${year}.csv`);
+            if (!response.ok) throw new Error('CSV not found');
+            return await response.text();
+        }
+
+        function parseCsv(csvText) {
+            const lines = csvText.split('\n').filter(line => line.trim() !== '');
+            if (lines.length < 2) return [];
+            
+            const headers = lines[0].split(',').map(h => h.trim());
+            
+            return lines.slice(1).map(line => {
+                // Handle commas in quoted values
+                const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                return headers.reduce((obj, header, index) => {
+                    let value = values[index]?.trim() || '';
+                    // Remove surrounding quotes if present
+                    if (value.startsWith('"') && value.endsWith('"')) {
+                        value = value.slice(1, -1);
+                    }
+                    obj[header] = value;
+                    return obj;
+                }, {});
+            });
+        }
+
+        function renderArticles(articles, year) {
+            carousel.innerHTML = articles.map(article => `
+                <div class="card">
+                    <div class="card-image-container">
+                        <img src="${IMAGES_BASE_PATH}images_${year}/${article['Image Filename']}" 
+                             alt="${article['Title']}" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>${article['Title']}</h3>
+                        <p class="authors">${article['Authors']}</p>
+                        <p>${truncateDescription(article['Description'])}</p>
+                        <a href="${article['URL']}" class="explore-btn" target="_blank" rel="noopener">Explore More</a>
+                    </div>
+                </div>
+            `).join('');
+
+            indicators.innerHTML = articles.map((_, i) => `
+                <div class="indicator ${i === 0 ? 'active' : ''}" onclick="goToSlide(${i})"></div>
+            `).join('');
+        }
+
+        function truncateDescription(desc) {
+            if (!desc) return '';
+            const words = desc.split(' ');
+            return words.length > 20 ? words.slice(0, 20).join(' ') + '...' : desc;
+        }
+
+        function showError() {
+            errorMessage.style.display = 'block';
+        }
+
+        function initCarousel() {
+            updateCarouselMetrics();
+            updateCarousel();
+            
+            // Auto-advance every 5 seconds
+            let autoSlide = setInterval(nextSlide, 5000);
+            
+            // Pause on hover/touch
+            carousel.addEventListener('mouseenter', () => clearInterval(autoSlide));
+            carousel.addEventListener('mouseleave', () => {
+                autoSlide = setInterval(nextSlide, 5000);
+            });
+            
+            // Touch support
+            let touchStartX = 0;
+            carousel.addEventListener('touchstart', (e) => {
+                touchStartX = e.touches[0].clientX;
+                clearInterval(autoSlide);
+            }, { passive: true });
+            
+            carousel.addEventListener('touchend', (e) => {
+                const touchEndX = e.changedTouches[0].clientX;
+                if (touchEndX < touchStartX - 50) nextSlide();
+                else if (touchEndX > touchStartX + 50) prevSlide();
+                autoSlide = setInterval(nextSlide, 5000);
+            }, { passive: true });
+        }
+
+        function updateCarouselMetrics() {
+            if (carousel.children.length === 0) return;
+            
+            // Calculate card width including margins
+            const firstCard = carousel.children[0];
+            const style = window.getComputedStyle(firstCard);
+            cardWidth = firstCard.offsetWidth + 
+                       parseInt(style.marginLeft) + 
+                       parseInt(style.marginRight);
+            
+            // Calculate how many cards are visible
+            visibleCards = Math.floor(carousel.offsetWidth / cardWidth);
+        }
+
+        function nextSlide() {
+            if (carousel.children.length <= visibleCards) return;
+            
+            currentIndex = (currentIndex + 1) % (carousel.children.length - visibleCards + 1);
+            updateCarousel();
+        }
+
+        function prevSlide() {
+            if (carousel.children.length <= visibleCards) return;
+            
+            currentIndex = (currentIndex - 1 + carousel.children.length - visibleCards + 1) % 
+                          (carousel.children.length - visibleCards + 1);
+            updateCarousel();
+        }
+
+        function goToSlide(index) {
+            currentIndex = Math.min(index, carousel.children.length - visibleCards);
+            updateCarousel();
+        }
+
         function updateCarousel() {
-            const maxOffset = -(carousel.children.length * cardWidth - carousel.offsetWidth);
-            let offset = -currentIndex * cardWidth;
-            
-            // Ensure we don't scroll past the last card
-            if (offset < maxOffset) {
-                offset = maxOffset;
-                currentIndex = Math.floor(-maxOffset / cardWidth);
-            }
-            
-            // Ensure we don't scroll before the first card
-            if (offset > 0) {
-                offset = 0;
-                currentIndex = 0;
-            }
-            
+            const maxOffset = -((carousel.children.length - visibleCards) * cardWidth);
+            const offset = Math.max(-currentIndex * cardWidth, maxOffset);
             carousel.style.transform = `translateX(${offset}px)`;
             
             // Update indicators
-            for (let i = 0; i < indicators.length; i++) {
-                indicators[i].classList.toggle('active', i === currentIndex);
-            }
+            Array.from(indicators.children).forEach((ind, i) => {
+                ind.classList.toggle('active', i === currentIndex);
+            });
         }
-        
-        function nextSlide() {
-            currentIndex++;
-            if (currentIndex > carousel.children.length - visibleCards) {
-                currentIndex = 0; // Loop back to start
-            }
-            updateCarousel();
-        }
-        
-        function prevSlide() {
-            currentIndex--;
-            if (currentIndex < 0) {
-                currentIndex = carousel.children.length - visibleCards; // Loop to end
-            }
-            updateCarousel();
-        }
-        
-        function goToSlide(index) {
-            currentIndex = index;
-            updateCarousel();
-        }
-        
-        // Auto-advance carousel
-        let autoSlide = setInterval(nextSlide, 5000);
-        
-        // Pause auto-advance on hover
-        carousel.addEventListener('mouseenter', () => {
-            clearInterval(autoSlide);
-        });
-        
-        carousel.addEventListener('mouseleave', () => {
-            autoSlide = setInterval(nextSlide, 5000);
-        });
-        
-        // Handle touch events for mobile
-        let touchStartX = 0;
-        let touchEndX = 0;
-        
-        carousel.addEventListener('touchstart', (e) => {
-            touchStartX = e.changedTouches[0].screenX;
-            clearInterval(autoSlide);
-        }, {passive: true});
-        
-        carousel.addEventListener('touchend', (e) => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-            autoSlide = setInterval(nextSlide, 5000);
-        }, {passive: true});
-        
-        function handleSwipe() {
-            const threshold = 50;
-            if (touchEndX < touchStartX - threshold) {
-                nextSlide();
-            } else if (touchEndX > touchStartX + threshold) {
-                prevSlide();
-            }
-        }
-        
-        // Initialize
-        updateCarousel();
+
+        // Make functions available globally for HTML onclick handlers
+        window.prevSlide = prevSlide;
+        window.nextSlide = nextSlide;
+        window.goToSlide = goToSlide;
     </script>
 </body>
 </html>

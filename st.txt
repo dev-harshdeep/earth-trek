@@ -1,0 +1,104 @@
+PS C:\Users\Harshit Rajput\Desktop\Harsh\earth-trek> tree /F /A
+Folder PATH listing for volume Windows
+Volume serial number is A4AC-9906
+C:.
+|   docker-compose.yml
+|   readme.md
+|
+\---app
+    |   app.py
+    |   Dockerfile
+    |   requirements.txt
+    |
+    +---static
+    |   |   00_earthmap1k.jpg
+    |   |   01_earthbump1k.jpg
+    |   |   02_earthspec1k.jpg
+    |   |   03_earthlights1k.jpg
+    |   |   04_earthcloudmap.jpg
+    |   |   05_earthcloudmaptrans.jpg
+    |   |   2k_earth_daymap.jpg
+    |   |   8k_earth_nightmap.jpg
+    |   |   chatbot.html
+    |   |   circle.png
+    |   |   earth_with_pollution.png
+    |   |   getFresnelMat.js
+    |   |   getStarfield.js
+    |   |   graph.html
+    |   |   index.js
+    |   |   processed_data.csv
+    |   |   style.css
+    |   |
+    |   +---nature_articles
+    |   |   |   articles_2011.csv
+    |   |   |   articles_2024.csv
+    |   |   |
+    |   |   +---images_2011
+    |   |   |       A drought-induced pervasive increase in tree mortality across Canada_s boreal forests.jpg
+    |   |   |       An energetic perspective on the regional response of precipitation to climate change.jpg
+    |   |   |       Carbon balance of Arctic tundra under increased snow cover mediated by a plant pathogen.jpg
+    |   |   |       Springtime atmospheric energy transport and the control of Arctic summer sea-ice extent.jpg
+    |   |   |       Temperature and vegetation seasonality diminishment over northern lands.jpg
+    |   |   |
+    |   |   +---images_2014
+    |   |   |       A bargaining game analysis of international climate negotiations.jpg
+    |   |   |       A global perspective on CMIP5 climate model biases.jpg
+    |   |   |       A large ozone-circulation feedback and its implications for global warming assessments.jpg
+    |   |   |       A local coastal adaptation pathway.jpg
+    |   |   |
+    |   |   +---images_2015
+    |   |   |       A top-down approach to projecting market impacts of climate change.jpg
+    |   |   |       Abrupt onset and prolongation of aragonite undersaturation events in the Southern Ocean.jpg
+    |   |   |
+    |   |   +---images_2016
+    |   |   |       A re-examination of the projected subtropical precipitation decline.jpg
+    |   |   |       Adaptation responses to climate change differ between global megacities.jpg
+    |   |   |       Amplified plant turnover in response to climate change forecast by Late Quaternary records.jpg
+    |   |   |       Anthropogenic forcing dominates global mean sea-level rise since 1970.jpg
+    |   |   |       Anthropogenic Mediterranean warming essential driver for present and future Sahel rainfall.jpg
+    |   |   |
+    |   |   +---images_2017
+    |   |   |       A climate stress-test of the financial system.jpg
+    |   |   |
+    |   |   +---images_2018
+    |   |   |       A global synthesis of animal phenological responses to climate change.jpg
+    |   |   |
+    |   |   +---images_2019
+    |   |   |       14C evidence that millennial and fast-cycling soil carbon are equally sensitive to warming.jpg
+    |   |   |
+    |   |   +---images_2020
+    |   |   |       A coralline alga gains tolerance to ocean acidification over multiple generations of exposure.jpg
+    |   |   |
+    |   |   +---images_2021
+    |   |   |       A multi-model analysis of long-term emissions and warming implications of current mitigation efforts.jpg
+    |   |   |
+    |   |   +---images_2022
+    |   |   |       A regime shift in seasonal total Antarctic sea ice extent in the twentieth century.jpg
+    |   |   |
+    |   |   +---images_2023
+    |   |   |       Antarctic shelf ocean warming and sea ice melt affected by projected El Niño changes.jpg
+    |   |   |
+    |   |   \---images_2024
+    |   |           300 years of sclerosponge thermometry shows global warming has exceeded 1_5__C.jpg
+    |   |           A decrease in radiative forcing and equivalent effective chlorine from hydrochlorofluorocarbons.jpg
+    |   |           A focus group study of ethical issues during climate-informed health decision-making.jpg
+    |   |           A more quiescent deep ocean under global warming.jpg
+    |   |
+    |   \---output_images
+    |           smudge_effect_year_1967.png
+    |           smudge_effect_year_2033.png
+    |           smudge_effect_year_2034.png
+    |           smudge_effect_year_2035.png
+    |
+    +---templates
+    |       articles.html
+    |       blog.html
+    |       explore.html
+    |       game.html
+    |       index.html
+    |       quiz.html
+    |
+    \---__pycache__
+            app.cpython-39.pyc
+
+PS C:\Users\Harshit Rajput\Desktop\Harsh\earth-trek> 
