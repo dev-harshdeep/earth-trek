@@ -8,7 +8,6 @@
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             color: #fff;
             min-height: 100vh;
             box-sizing: border-box;
@@ -19,13 +18,14 @@
             position: relative;
             width: 100%;
             max-width: 1200px;
+            height:600px;
            
         }
 
         .carousel-title {
             text-align: center;
             margin-bottom: 30px;
-            font-size: 2.5rem;
+            font-size: 1rem;
             color: #7fdbff;
             position: relative;
         }
@@ -58,6 +58,7 @@
             overflow: hidden;
             position: relative;
             padding-bottom: 20px;
+            margin: 10px
         }
 
         .card::before {
@@ -68,11 +69,6 @@
             right: 0;
             height: 5px;
             background: linear-gradient(90deg, #7fdbff, #0074d9, #7fdbff);
-        }
-
-        .card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
         }
 
         .card-image-container {
@@ -98,13 +94,13 @@
 
         .card h3 {
             margin: 0 0 15px;
-            font-size: 1.4rem;
+            font-size: 1rem;
             color: #7fdbff;
             line-height: 1.3;
         }
 
         .card p {
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             color: #e0e0e0;
             margin-bottom: 12px;
             line-height: 1.5;
@@ -169,14 +165,6 @@
             transform: translateY(-50%) scale(1.1);
         }
 
-        .button.left {
-            left: -25px;
-        }
-
-        .button.right {
-            right: -25px;
-        }
-
         .indicators {
             display: flex;
             justify-content: center;
@@ -210,11 +198,11 @@
             }
             
             .button.left {
-                left: -15px;
+                left: 0;
             }
             
             .button.right {
-                right: -15px;
+                right: 0;
             }
             
             .card {
@@ -226,7 +214,6 @@
 </head>
 <body>
     <div class="carousel-container">
-        <h1 class="carousel-title" id="year-title">Space Articles</h1>
         <button class="button left" onclick="prevSlide()">&#10094;</button>
         <div class="carousel" id="carousel">
             <!-- Articles will be inserted here by JavaScript -->
@@ -241,6 +228,7 @@
 
     <script>
         // Configuration - update these paths if needed
+        // Update paths to be relative to the current directory
         const ARTICLES_BASE_PATH = '../static/nature_articles/';
         const IMAGES_BASE_PATH = '../static/nature_articles/';
         
@@ -269,7 +257,6 @@
             indicators.innerHTML = '';
             
             const year = getYearFromUrl();
-            yearTitle.textContent = `Space Articles ${year}`;
             
             try {
                 const csvData = await fetchCsv(year);
@@ -327,7 +314,7 @@
             carousel.innerHTML = articles.map(article => `
                 <div class="card">
                     <div class="card-image-container">
-                        <img src="${IMAGES_BASE_PATH}images_${year}/${article['Image Filename']}" 
+                        <img src="${IMAGES_BASE_PATH}images_${year}/${article['Image Filename'].split('/').pop()}" 
                              alt="${article['Title']}" loading="lazy">
                     </div>
                     <div class="card-content">

@@ -318,11 +318,11 @@
         
 
         <iframe
-        id="art"
-        src="./articles.html?year=2011" 
-        title="Embedded Page"
-        scrolling="auto"
-      ></iframe>
+          id="art"
+          src="articles.html?year=2011" 
+          title="Embedded Page"
+          scrolling="auto"
+        ></iframe>
             </div>
     </div>
     <div id="right">
@@ -374,7 +374,6 @@ document.addEventListener('DOMContentLoaded', function() {
   } else {
     isExpanded = isExpanded === 'true';
       elementsToHide.forEach(el => {
-          console.log('isExpanded', isExpanded);
           el.style.display = isExpanded ? '' : 'none';
       });
   }
@@ -415,7 +414,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       const actualCurrentYear = new Date().getFullYear();
 
-      const currentYear = Math.min(actualCurrentYear, 2035);
+      let currentYear = Math.min(actualCurrentYear, 2035);
       let startYear = 1967; // Initialize to 0, will be set dynamically
       let endYear = 0; // Initialize to 0, will be set dynamically
       const yearWidth = 120; // Width of each year marker in pixels
@@ -504,11 +503,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 let year1 = year; // Replace this with your actual year variable or logic
 
                 if (year1 >= 2011 && year1 <= 2024) {
-                  artc.src = "/articles/" + year1; // Use the given year
+                  artc.src = `articles.html?year=${year1}`; // Updated path
                 } else {
-                  // Generate a random integer between 2011 and 2024
                   year1 = Math.floor(Math.random() * (2024 - 2011 + 1)) + 2011;
-                  artc.src = "/articles/" + year1; // Use the random year
+                  artc.src = `articles.html?year=${year1}`; // Updated path
                 }
               } else {
                 console.error(`Year ${year} is out of range.`);

@@ -328,23 +328,24 @@
 
     <main>
         <style>
+            section.hero {
+              transform:none;
+              backdrop-filter: none;
+            }
+
             .hero {
-              position: relative;
               padding: 0;
-              height: 75vh;
+              height: 65vh;
               width: 100%;
               margin: 1rem 0;
-              transition: all 0.3s ease-out;
-              transform-origin: center center;
-              overflow: hidden;
               box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
               border-radius: 8px;
+              position:relative;
             }
             
             .hero.fixed {
-              width: 100%;
-              height: 100%;
-              position: fixed;
+              width: 100vw;
+              height: 100vh;
               z-index: 999;
               top: 0;
               left: 0;
@@ -352,7 +353,6 @@
               padding: 0;
               border-radius: 0;
               box-shadow: none;
-              transition: all 0.7s ease-out;
             }
             
             .frame {
@@ -370,7 +370,6 @@
               top: 0;
               left: 0;
               opacity: 0;
-              transition: opacity 0.3s ease;
               display: flex;
               align-items: center;
               justify-content: center;
@@ -407,7 +406,7 @@
             /* Close Button with CDN SVG */
             .close {
               display: none;
-              position: absolute;
+              position: fixed;
               top: 25px;
               right: 25px;
               background: rgba(255, 255, 255, 0.95);
@@ -421,25 +420,60 @@
               transition: all 0.3s ease;
             }
             
+            .close img {
+              width: 20px;
+              height: 20px;
+              pointer-events: none;
+            }
+            .close:hover {
+              transform: scale(1.1);
+              background: rgba(255, 255, 255, 1);
+            }
+            
             .hero.fixed > .close {
               display: flex;
               align-items: center;
               justify-content: center;
             }
             
-            .close:hover {
-              transform: scale(1.1);
-              background: rgba(255, 255, 255, 1);
-            }
-            
-            .close img {
-              width: 20px;
-              height: 20px;
-              pointer-events: none;
-            }
-            
             .prevent-scroll {
               overflow: hidden;
+            }
+
+            .frame-expanded{
+              position:fixed;
+              visibility: hidden;
+              opacity:0;
+              z-index: 999; 
+              transition: all 0.7s ease-out;
+              backdrop-filter: blur(10px);
+              background: rgba(255, 255, 255, 0.11);
+            }
+            .hero.fixed > .frame-expanded{
+              top:0 !important;
+              left:0 !important;
+              width: 100% !important;
+              height: 100% !important;
+              opacity: 1 !important;
+              visibility: visible !important;
+            }
+            .hero.fixed > .frame{
+              visibility: hidden;
+              opacity:0;
+            }
+            .frame-expanded-content{
+              opacity:0;
+              transition: opacity 0.3s ease-out;
+              transition-delay: 0.7s;
+              border: 0;
+              width: 100%;
+              height: 100%;
+            }
+            .hero.fixed .frame-expanded-content{
+              opacity:1;
+            }
+            section#overview{
+              padding: 2rem 3rem;
             }
           </style>
       <script>
@@ -448,8 +482,8 @@
           document.querySelector("body").classList.add("prevent-scroll");
           document.querySelector("html").classList.add("prevent-scroll");
           document.querySelector("header").classList.add("expanded");
-          const iframe = document.querySelector(".hero iframe");
-          iframe.src = "./explore?expanded=true";
+          
+          const iframe = document.querySelector(".hero > .frame-expanded-content");
         }
 
         function shrink() {
@@ -457,21 +491,34 @@
           document.querySelector("body").classList.remove("prevent-scroll");
           document.querySelector("html").classList.remove("prevent-scroll");
           document.querySelector("header").classList.remove("expanded");
-          const iframe = document.querySelector(".hero iframe");
-          iframe.src = "./explore.html?expanded=false";
+          const iframe = document.querySelector(".hero  .frame-expanded-content");
+        }
+        function setLayout() {
+          console.log('onload setLayout');
+          const preview = document.querySelector(".hero > .frame");
+          let previewReact = preview.getBoundingClientRect();
+          const frameExpanded = document.querySelector(".hero .frame-expanded");
+
+          frameExpanded.style.top = `${previewReact.top}px`;
+          frameExpanded.style.left = `${previewReact.left}px`;
+          frameExpanded.style.width = `${previewReact.width}px`;
+          frameExpanded.style.height = `${previewReact.height}px`;
         }
       </script>
       <section class="hero">
         <!-- <h1>EARTH TREK</h1>
             <p>Exploring Our Changing Planet</p> -->
-        <iframe class="frame" src="./explore"></iframe>
-        <button class="close" onclick="shrink()" aria-label="Close">
-            <img src="https://img.icons8.com/?size=100&id=8112&format=png&color=000000" alt="Close">
-          </button>
-                <div class="wrapper">
-          <button onclick="expand()">Explore</button>
-        </div>
+        <iframe class="frame" src="./explore.html?expanded=false" onload="setLayout()"></iframe>
+          <div class="wrapper"><button onclick="expand()">Explore</button></div>
+          
+          <div class="frame-expanded">
+            <iframe class="frame-expanded-content" src="./explore.html?expanded=true"></iframe>
+          </div>
+          <button class="close" onclick="shrink()" aria-label="Close">
+        <img src="https://img.icons8.com/?size=100&id=8112&format=png&color=000000" alt="Close">
+         </button>
       </section>
+      
 
       <section id="overview">
         <h2>Climate Change Overview</h2>
