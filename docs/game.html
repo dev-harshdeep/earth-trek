@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoGuardian: Mission Earth</title>
+    <style>
+        :root {
+            --primary-color: #4cc9f0;
+            --secondary-color: #f72585;
+            --text-color: #ffffff;
+            --background-color: #000033;
+            --success-color: #4caf50;
+            --danger-color: #f44336;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        #game-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80') no-repeat center center;
+            background-size: cover;
+            animation: pan 60s linear infinite;
+        }
+
+        @keyframes pan {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 0%; }
+        }
+
+        #character {
+            position: absolute;
+            width: 40px;
+            height: 60px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%234cc9f0"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>') no-repeat center center;
+            background-size: contain;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: all 0.3s ease;
+        }
+
+        .task {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            cursor: pointer;
+        }
+
+        .task.trash {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23f44336"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>');
+        }
+
+        .task.tree {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%234caf50"><path d="M12 22L3 11H7V4H17V11H21L12 22Z"/></svg>');
+        }
+
+        #score, #time {
+            position: absolute;
+            top: 20px;
+            font-size: 24px;
+            z-index: 10;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        #score { left: 20px; }
+        #time { right: 20px; }
+
+        #message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+            z-index: 20;
+            max-width: 80%;
+        }
+
+        #start-button, #restart-button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #start-button:hover, #restart-button:hover {
+            background-color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="background"></div>
+        <div id="character"></div>
+        <div id="score">Score: 0</div>
+        <div id="time">Time: 60s</div>
+        <div id="message">
+            <h2>Welcome to EcoGuardian: Mission Earth</h2>
+            <p>Help clean up the environment by collecting trash and planting trees.</p>
+            <p>Use arrow keys or click/tap where you want to move.</p>
+            <p>Collect trash: +1 point | Plant trees: +2 points</p>
+            <p>Complete the mission in 60 seconds!</p>
+            <button id="start-button">Start Mission</button>
+        </div>
+    </div>
+
+    <script>
+        const character = document.getElementById('character');
+        const gameContainer = document.getElementById('game-container');
+        const scoreElement = document.getElementById('score');
+        const timeElement = document.getElementById('time');
+        const messageElement = document.getElementById('message');
+        const startButton = document.getElementById('start-button');
+
+        let score = 0;
+        let timeLeft = 60;
+        let gameActive = false;
+        let gameTimer;
+
+        function updateScore() {
+            scoreElement.textContent = `Score: ${score}`;
+        }
+
+        function updateTime() {
+            timeElement.textContent = `Time: ${timeLeft}s`;
+            if (timeLeft <= 0) {
+                endGame();
+            }
+        }
+
+        function moveCharacter(x, y) {
+            const containerRect = gameContainer.getBoundingClientRect();
+            const charRect = character.getBoundingClientRect();
+
+            const newX = Math.max(0, Math.min(x - containerRect.left - charRect.width / 2, containerRect.width - charRect.width));
+            const newY = Math.max(0, Math.min(y - containerRect.top - charRect.height / 2, containerRect.height - charRect.height));
+
+            character.style.left = `${newX}px`;
+            character.style.top = `${newY}px`;
+        }
+
+        function createTask() {
+            const task = document.createElement('div');
+            task.classList.add('task');
+            if (Math.random() > 0.5) {
+                task.classList.add('trash');
+            } else {
+                task.classList.add('tree');
+            }
+            task.style.left = `${Math.random() * (gameContainer.clientWidth - 40)}px`;
+            task.style.top = `${Math.random() * (gameContainer.clientHeight - 40)}px`;
+            gameContainer.appendChild(task);
+
+            task.addEventListener('click', () => collectTask(task));
+        }
+
+        function collectTask(task) {
+            if (!gameActive) return;
+
+            const charRect = character.getBoundingClientRect();
+            const taskRect = task.getBoundingClientRect();
+
+            if (
+                charRect.left < taskRect.right &&
+                charRect.right > taskRect.left &&
+                charRect.top < taskRect.bottom &&
+                charRect.bottom > taskRect.top
+            ) {
+                if (task.classList.contains('trash')) {
+                    score += 1;
+                    showMessage("Great job! You collected some trash.");
+                } else {
+                    score += 2;
+                    showMessage("Excellent! You planted a tree.");
+                }
+                task.remove();
+                updateScore();
+                createTask();
+            }
+        }
+
+        function showMessage(text) {
+            messageElement.innerHTML = `<p>${text}</p>`;
+            messageElement.style.display = 'block';
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 2000);
+        }
+
+        function startGame() {
+            gameActive = true;
+            score = 0;
+            timeLeft = 60;
+            updateScore();
+            updateTime();
+            messageElement.style.display = 'none';
+
+            // Clear existing tasks
+            document.querySelectorAll('.task').forEach(task => task.remove());
+
+            // Create initial tasks
+            for (let i = 0; i < 5; i++) {
+                createTask();
+            }
+
+            gameTimer = setInterval(() => {
+                timeLeft--;
+                updateTime();
+            }, 1000);
+        }
+
+        function endGame() {
+            gameActive = false;
+            clearInterval(gameTimer);
+            showMessage(`
+                <h2>Mission Complete!</h2>
+                <p>You've helped clean up the Earth!</p>
+                <p>Final Score: ${score}</p>
+                <button id="restart-button">Play Again</button>
+            `);
+            document.getElementById('restart-button').addEventListener('click', startGame);
+        }
+
+        // Event Listeners
+        gameContainer.addEventListener('click', (e) => {
+            if (gameActive) {
+                moveCharacter(e.clientX, e.clientY);
+            }
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if (!gameActive) return;
+
+            const charRect = character.getBoundingClientRect();
+            const step = 10;
+
+            switch (e.key) {
+                case 'ArrowLeft':
+                    moveCharacter(charRect.left - step, charRect.top);
+                    break;
+                case 'ArrowRight':
+                    moveCharacter(charRect.right + step, charRect.top);
+                    break;
+                case 'ArrowUp':
+                    moveCharacter(charRect.left, charRect.top - step);
+                    break;
+                case 'ArrowDown':
+                    moveCharacter(charRect.left, charRect.bottom + step);
+                    break;
+            }
+        });
+
+        startButton.addEventListener('click', startGame);
+
+        // Show initial message
+        messageElement.style.display = 'block';
+
+        // Check for task collection every 100ms
+        setInterval(() => {
+            document.querySelectorAll('.task').forEach(task => collectTask(task));
+        }, 100);
+    </script>
+</body>
+</html>

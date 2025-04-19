@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate Change Blog - Earth Trek</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4cc9f0;
+            --secondary-color: #f72585;
+            --text-color: #ffffff;
+            --background-color: #000000;
+            --card-bg-color: rgba(255, 255, 255, 0.1);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        .space-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: url('https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3540&q=80') no-repeat center center;
+            background-size: cover;
+            animation: spaceMove 60s linear infinite;
+        }
+
+        @keyframes spaceMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 100% 100%; }
+        }
+
+        header {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        nav ul {
+            list-style-type: none;
+            display: flex;
+            gap: 2rem;
+            padding: 0;
+        }
+
+        nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-family: 'Space Mono', monospace;
+            font-size: 1.1rem;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .blog-card {
+            background-color: var(--card-bg-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .blog-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .blog-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(76, 201, 240, 0.3);
+        }
+
+        .blog-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .author-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 1rem;
+        }
+
+        .blog-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .blog-excerpt {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .read-more {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+            align-self: flex-start;
+        }
+
+        .read-more:hover {
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 600px) {
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="space-background"></div>
+
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Latest Climate Change Insights</h1>
+        <div class="blog-grid" id="blogGrid">
+            <!-- Blog cards will be dynamically inserted here -->
+        </div>
+    </main>
+
+    <script>
+        const blogData = [
+            {
+                title: "The Impact of Rising Sea Levels on Coastal Communities",
+                author: "Dr. Emma Waters",
+                excerpt: "As global temperatures continue to rise, coastal communities face unprecedented challenges. This article explores the latest research on sea level rise and its implications for millions of people worldwide.",
+                authorIcon: "https://i.pravatar.cc/150?img=1"
+            },
+            {
+                title: "Innovative Technologies in Renewable Energy",
+                author: "Prof. Alan Green",
+                excerpt: "Discover the cutting-edge technologies that are revolutionizing the renewable energy sector. From advanced solar panels to next-generation wind turbines, these innovations are paving the way for a sustainable future.",
+                authorIcon: "https://i.pravatar.cc/150?img=2"
+            },
+            {
+                title: "The Role of Artificial Intelligence in Climate Modeling",
+                author: "Dr. Sarah Chen",
+                excerpt: "Artificial Intelligence is transforming the way we understand and predict climate change. Learn how machine learning algorithms are improving the accuracy of climate models and helping us prepare for future scenarios.",
+                authorIcon: "https://i.pravatar.cc/150?img=3"
+            },
+            {
+                title: "Sustainable Agriculture: Feeding the World Without Harming the Planet",
+                author: "Dr. Michael Fields",
+                excerpt: "Explore the latest advancements in sustainable agriculture that are helping to feed a growing global population while minimizing environmental impact. From vertical farming to precision agriculture, the future of food is changing.",
+                authorIcon: "https://i.pravatar.cc/150?img=4"
+            },
+            {
+                title: "The Psychology of Climate Change: Why We Need to Act Now",
+                author: "Prof. Lisa Mind",
+                excerpt: "Understanding the psychological barriers to climate action is crucial for effective change. This article delves into the cognitive biases and social factors that influence our response to climate change and how to overcome them.",
+                authorIcon: "https://i.pravatar.cc/150?img=5"
+            },
+            {
+                title: "Ocean Acidification: The Silent Threat to Marine Ecosystems",
+                author: "Dr. Robert Coral",
+                excerpt: "As the oceans absorb more CO2, their chemistry is changing at an alarming rate. Discover the latest research on ocean acidification and its far-reaching consequences for marine life and global ecosystems.",
+                authorIcon: "https://i.pravatar.cc/150?img=6"
+            }
+        ];
+
+        function createBlogCard(blog) {
+            const card = document.createElement('div');
+            card.className = 'blog-card';
+            card.innerHTML = `
+                <div class="blog-card-header">
+                    <img src="${blog.authorIcon}" alt="${blog.author}" class="author-icon">
+                    <div>
+                        <div class="blog-title">${blog.title}</div>
+                        <small>${blog.author}</small>
+                    </div>
+                </div>
+                <p class="blog-excerpt">${blog.excerpt}</p>
+                <a href="#" class="read-more">Read more →</a>
+            `;
+            return card;
+        }
+
+        function loadBlogCards() {
+            const blogGrid = document.getElementById('blogGrid');
+            blogData.forEach(blog => {
+                const card = createBlogCard(blog);
+                blogGrid.appendChild(card);
+            });
+        }
+
+        function checkCardVisibility() {
+            const cards = document.querySelectorAll('.blog-card');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const isVisible = (rect.top >= 0 && rect.bottom <= window.innerHeight);
+                if (isVisible) {
+                    card.classList.add('visible');
+                }
+            });
+        }
+
+        window.addEventListener('load', loadBlogCards);
+        window.addEventListener('scroll', checkCardVisibility);
+        window.addEventListener('resize', checkCardVisibility);
+
+        // Initial check for card visibility
+        setTimeout(checkCardVisibility, 100);
+    </script>
+</body>
+
+</html>

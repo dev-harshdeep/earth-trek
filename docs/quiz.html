@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate Change Quiz - Earth Trek</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&family=Space+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4cc9f0;
+            --secondary-color: #f72585;
+            --text-color: #ffffff;
+            --background-color: #000000;
+            --correct-color: #4caf50;
+            --wrong-color: #f44336;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background: url('https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3540&q=80') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-color);
+            overflow-x: hidden;
+            animation: moveBackground 30s linear infinite;
+        }
+
+        @keyframes moveBackground {
+            0% {
+                background-position: 0 0;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0 100%;
+            }
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        nav ul {
+            list-style-type: none;
+            display: flex;
+            gap: 2rem;
+            padding: 0;
+        }
+
+        nav a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-family: 'Space Mono', monospace;
+            font-size: 1.1rem;
+        }
+
+        nav a:hover {
+            color: var(--primary-color);
+        }
+
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 6rem 2rem 2rem;
+        }
+
+        .quiz-container {
+            background: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .quiz-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(76, 201, 240, 0.3);
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .question {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            color: #ffffff;
+        }
+
+        .option {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 2px solid var(--primary-color);
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .option:hover {
+            background-color: rgba(76, 201, 240, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .option.correct {
+            background-color: var(--correct-color);
+            color: white;
+        }
+
+        .option.wrong {
+            background-color: var(--wrong-color);
+            color: white;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 5px;
+            color: var(--background-color);
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: 'Space Mono', monospace;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .result {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @media (max-width: 600px) {
+            .options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="quiz-container">
+            <h1>Climate Change Quiz</h1>
+            <div id="quiz">
+                <div class="question" id="question"></div>
+                <div class="options" id="options"></div>
+                <div class="controls">
+                    <button id="skip">Skip</button>
+                    <button id="next" style="display: none;">Next</button>
+                </div>
+            </div>
+            <div class="result" id="result" style="display: none;"></div>
+        </div>
+    </main>
+
+    <script>
+        const quizData = [
+            {
+                question: "What is the primary greenhouse gas responsible for climate change?",
+                options: ["Carbon dioxide", "Methane", "Water vapor", "Ozone"],
+                correct: 0
+            },
+            {
+                question: "Which of the following is NOT a consequence of global warming?",
+                options: ["Rising sea levels", "Increased biodiversity", "More frequent extreme weather events", "Melting glaciers"],
+                correct: 1
+            },
+            {
+                question: "What is the Paris Agreement?",
+                options: ["A trade deal between European countries", "An international treaty on climate change", "A space exploration program", "A global economic forum"],
+                correct: 1
+            },
+            {
+                question: "Which sector contributes the most to global greenhouse gas emissions?",
+                options: ["Transportation", "Agriculture", "Energy production", "Manufacturing"],
+                correct: 2
+            },
+            {
+                question: "What is the term for the gradual increase in Earth's average temperature?",
+                options: ["Global warming", "Climate change", "Greenhouse effect", "Ozone depletion"],
+                correct: 0
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        const questionEl = document.getElementById('question');
+        const optionsEl = document.getElementById('options');
+        const skipBtn = document.getElementById('skip');
+        const nextBtn = document.getElementById('next');
+        const quizEl = document.getElementById('quiz');
+        const resultEl = document.getElementById('result');
+
+        function loadQuestion() {
+            const question = quizData[currentQuestion];
+            questionEl.textContent = question.question;
+
+            optionsEl.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('option');
+                button.addEventListener('click', () => selectOption(index));
+                optionsEl.appendChild(button);
+            });
+
+            nextBtn.style.display = 'none';
+            skipBtn.style.display = 'inline-block';
+        }
+
+        function selectOption(index) {
+            const question = quizData[currentQuestion];
+            const options = optionsEl.children;
+
+            for (let i = 0; i < options.length; i++) {
+                options[i].disabled = true;
+                if (i === question.correct) {
+                    options[i].classList.add('correct');
+                } else if (i === index) {
+                    options[i].classList.add('wrong');
+                }
+            }
+
+            if (index === question.correct) {
+                score++;
+            }
+
+            nextBtn.style.display = 'inline-block';
+            skipBtn.style.display = 'none';
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                loadQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            quizEl.style.display = 'none';
+            resultEl.style.display = 'block';
+            resultEl.textContent = `You scored ${score} out of ${quizData.length}!`;  // Correct template literal
+        }
+        
+
+        nextBtn.addEventListener('click', nextQuestion);
+        skipBtn.addEventListener('click', nextQuestion);
+
+        loadQuestion();
+    </script>
+
+</body>
+
+</html>
