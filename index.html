@@ -494,7 +494,6 @@
           const iframe = document.querySelector(".hero  .frame-expanded-content");
         }
         function setLayout() {
-          console.log('onload setLayout');
           const preview = document.querySelector(".hero > .frame");
           let previewReact = preview.getBoundingClientRect();
           const frameExpanded = document.querySelector(".hero .frame-expanded");
@@ -768,9 +767,6 @@
             console.error("Error updating dropdown value:", error);
           }
         }
-
-        // Call setCurrentYear to update the visualization
-        console.log(Math.round(currentYear));
 
         // Update the dropdown with the current year
         updateDropdownValue(Math.round(currentYear));

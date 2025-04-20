@@ -406,6 +406,8 @@ document.addEventListener('DOMContentLoaded', function() {
   // 4. Fallback: Check periodically every 300ms
   setInterval(updateElementsBasedOnURL, 300);
 });
+
+
 document.addEventListener('DOMContentLoaded', function() {
 
       const timeline = document.querySelector(".timeline");
@@ -496,7 +498,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (dropdown) {
               // Ensure the year is within the dropdown's range
               if (year >= 1967 && year <= 2035) {
-                console.log(year);
                 dropdown.value = year; // Set the dropdown value
                 const event = new Event("change", { bubbles: true });
                 dropdown.dispatchEvent(event);
