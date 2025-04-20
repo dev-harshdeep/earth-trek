@@ -406,6 +406,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // 4. Fallback: Check periodically every 300ms
   setInterval(updateElementsBasedOnURL, 300);
 });
+document.addEventListener('DOMContentLoaded', function() {
 
       const timeline = document.querySelector(".timeline");
       const timelineContainer = document.querySelector(".timeline-container");
@@ -520,7 +521,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Call setCurrentYear to update the visualization
-        console.log(Math.round(currentYear));
 
         // Update the dropdown with the current year
         updateDropdownValue(Math.round(currentYear));
@@ -586,6 +586,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // Add resize event listener to keep the timeline centered
       window.addEventListener("resize", () => updateTimeline());
+})
     </script>
   </body>
 </html>
