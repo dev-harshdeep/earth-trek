@@ -428,7 +428,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       // Function to load available textures and extract years
       async function loadAvailableTextures() {
-        const folderPath = './static/output_images'; // Relative path to your textures
+        const folderPath = '/static/output_images'; // Relative path to your textures
         try {
             // This assumes your static files are served and can be listed via directory indexing
             const response = await fetch(folderPath);
