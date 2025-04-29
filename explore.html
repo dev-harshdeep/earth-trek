@@ -20,7 +20,6 @@
       }
       .container {
         width: 90%;
-
         padding: 30px;
         border-radius: 20px;
       }
@@ -34,11 +33,11 @@
       #yearDisplay {
         text-align: center;
         font-size: 28px;
-        display: none;
         margin-bottom: 30px;
         color: #fff;
         text-shadow: 0 0 15px rgba(77, 184, 255, 0.8);
         transition: all 0.3s ease;
+        display: block;
       }
       .timeline-container {
         position: relative;
@@ -99,9 +98,9 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 60px;
-        height: 60px;
-        background-size: cover;
+        width: 20px;
+        height: 20px;
+        background-color: #fff;
         border-radius: 50%;
         box-shadow: 0 0 20px rgba(77, 184, 255, 0.8);
         z-index: 10;
@@ -132,35 +131,20 @@
         overflow: hidden;
       }
 
-      /* Canvas should take the full width and be positioned at the top */
       canvas {
         display: block;
         width: 100vw;
-        height: 10vh; /* Adjust the height of the Earth rendering */
-        position: absolute; /* Position it at the top */
-        top: 0; /* Align to the top of the page */
-        left: 0; /* Align to the left */
-      }
-
-      /* Style for the 2D box */
-      <!-- #rect-box {
+        height: 10vh;
         position: absolute;
-        bottom: 0;
+        top: 0;
         left: 0;
-        width: 100%;
-        height: 100px;
-
-        z-index: 10;
-        color: wheat;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
       }
-      -- > .container {
-        text-align: center;
-        width: 100%;
-        padding: 0 10px;
+
+      .container {
+        width: 98%;
+        user-select: none;
+
+        padding: 0 20px;
       }
 
       h2 {
@@ -180,7 +164,6 @@
         transform: translate(-50%, -50%);
         width: 100%;
         height: 82vh;
-
         text-align: center;
         display: flex;
         justify-content: center;
@@ -194,7 +177,6 @@
       .common {
         width: 60%;
         height: 30vh;
-
         background-color: rgba(145, 163, 166, 0.542);
         margin-top: 20px;
         border: 2px solid white;
@@ -205,7 +187,6 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
-
         width: 50%;
         height: 82vh;
       }
@@ -215,7 +196,6 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
-
         width: 50%;
         height: 82vh;
       }
@@ -223,7 +203,6 @@
       .common2 {
         width: 45%;
         height: 30vh;
-
         margin-top: 20px;
       }
 
@@ -234,67 +213,75 @@
       .common4 {
         width: 60%;
         height: 30vh;
-
         background-color: rgba(145, 163, 166, 0.542);
         margin-top: 20px;
         border: 2px solid white;
       }
 
-      /* Optional: Set size for the iframe */
       iframe {
         width: 100%;
         height: 524px;
         border: none;
-        margin-left: 29px;
+        margin-left: 0;
       }
+      
       body {
         margin: 0;
         overflow: hidden;
-        position: relative; /* Ensure positioning context for fixed elements */
+        position: relative;
       }
+      
       #canvas {
         position: absolute;
-        top: 50px; /* Adjust this based on the height of your top div */
+        top: 50px;
         left: 0;
         right: 0;
-        bottom: 50px; /* Adjust this based on the height of your bottom div */
-        z-index: 1; /* Canvas underneath */
+        bottom: 50px;
+        z-index: 1;
       }
+      
       #left,
       #right,
       #bottom {
         position: fixed;
         color: white;
         padding: 10px;
-        z-index: 2; /* HTML content on top */
+        z-index: 2;
       }
+      
       #left {
         left: 0;
-        top: 50px; /* Adjust for the top div */
-        width: 350px; /* Fixed width */
-        height: calc(100% - 100px); /* Full height minus top and bottom divs */
+        top: 150px;
+        width: 350px;
+        height: calc(100% - 100px);
       }
+      
       #right {
         right: 0;
-        top: 50px; /* Adjust for the top div */
-        width: 350px; /* Fixed width */
-        height: calc(100% - 100px); /* Full height minus top and bottom divs */
+        top: 50px;
+        width: 350px;
+        height: calc(100% - 100px);
       }
+      
       #bottom {
+        position: fixed;
         left: 0;
         right: 0;
         bottom: 0;
-        height: 50px; /* Fixed height */
+        height: 100px;
+        z-index: 100;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
-      /* Positioning the divs in a grid or another layout as needed */
+      
       .dd-inside {
         display: none;
       }
-
-       
- 
-
-
+      #rect-box{
+        width: 100%;
+      }
     </style>
     <script type="importmap">
       {
@@ -314,35 +301,20 @@
           <label for="yearDropdown">Select a year:</label>
           <select id="yearDropdown"></select>
         </div>
-
-        
-
         <iframe
           id="art"
           src="articles.html?year=2011" 
           title="Embedded Page"
           scrolling="auto"
         ></iframe>
-            </div>
+      </div>
     </div>
     <div id="right">
- 
-
-    <div class="chatbotdata"> 
-
-      <!-- 
-        <iframe
-        src="{{ url_for('static', filename='chatbot.html') }}"
-        title="Embedded Page"
-        scrolling="auto"
-        ></iframe>
-        -->
-    </div>
+      <div class="chatbotdata"></div>
     </div>
     <div id="bottom">
       <div id="rect-box">
         <div class="container">
-          <div id="yearDisplay" aria-live="polite">2011</div>
           <div class="timeline-container">
             <div class="timeline"></div>
             <div class="selector"></div>
@@ -352,146 +324,133 @@
     </div>
     
     <script>
-    
-   // Wait for DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-  // Elements to show/hide
-  const elementsToHide = [
-    document.getElementById('right'),
-    document.getElementById('left')
-  ].filter(el => el !== null);
+    // Wait for DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      // Elements to show/hide
+      const elementsToHide = [
+        document.getElementById('right'),
+        document.getElementById('left')
+      ].filter(el => el !== null);
 
-  // Function to check URL and toggle elements
-  function updateElementsBasedOnURL() {
-    const urlParams = new URLSearchParams(window.location.search);
-
-
-    let isExpanded = urlParams.get('expanded') ;
-    if (isExpanded===null) {
-      elementsToHide.forEach(el => { 
-        el.style.display =  '';
-      });
-  } else {
-    isExpanded = isExpanded === 'true';
-      elementsToHide.forEach(el => {
-          el.style.display = isExpanded ? '' : 'none';
-      });
-  }
-
-  }
-
-  // 1. Check immediately on load
-  updateElementsBasedOnURL();
-
-  // 2. Set up MutationObserver to detect URL changes
-  let lastURL = window.location.href;
-  const observer = new MutationObserver(function() {
-    if (window.location.href !== lastURL) {
-      lastURL = window.location.href;
-      updateElementsBasedOnURL();
-    }
-  });
-
-  // Start observing the document
-  observer.observe(document, {
-    subtree: true,
-    childList: true,
-    attributes: true,
-    characterData: true
-  });
-
-  // 3. Listen for popstate events (back/forward navigation)
-  window.addEventListener('popstate', updateElementsBasedOnURL);
-
-  // 4. Fallback: Check periodically every 300ms
-  setInterval(updateElementsBasedOnURL, 300);
-});
-
-
-document.addEventListener('DOMContentLoaded', function() {
-
-      const timeline = document.querySelector(".timeline");
-      const timelineContainer = document.querySelector(".timeline-container");
-      const yearDisplay = document.getElementById("yearDisplay");
-      const selector = document.querySelector(".selector");
-
-      const actualCurrentYear = new Date().getFullYear();
-
-      let currentYear = Math.min(actualCurrentYear, 2035);
-      let startYear = 1967; // Initialize to 0, will be set dynamically
-      let endYear = 0; // Initialize to 0, will be set dynamically
-      const yearWidth = 120; // Width of each year marker in pixels
-      let isDragging = false;
-      let startX, scrollLeft;
-      let lastDragTime = 0;
-      const dragThrottle = 50; // Minimum time between drag updates in milliseconds
-
-      // Function to load available textures and extract years
-      async function loadAvailableTextures() {
-        const folderPath = '/static/output_images'; // Relative path to your textures
-        try {
-            // This assumes your static files are served and can be listed via directory indexing
-            const response = await fetch(folderPath);
-            const html = await response.text();
-            
-            // Parse the directory listing HTML to extract filenames
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const links = doc.querySelectorAll('a[href$=".png"]');
-            
-            const years = [];
-            links.forEach(link => {
-                const file = link.getAttribute('href');
-                if (file.includes('smudge_effect_year_')) {
-                    const year = parseInt(file.match(/\d{4}/)[0]);
-                    years.push(year);
-                    
-                    // Update start and end year based on available years
-                    startYear = Math.min(startYear, year);
-                    endYear = Math.max(endYear, year);
-                }
-            });
-            
-            return years;
-        } catch (error) {
-            console.error("Error loading textures:", error);
-            return [];
-        }
-    }
-
-      function createYearMarkers() {
-        timeline.innerHTML = "";
-        const totalWidth = yearWidth * (endYear - startYear + 1);
-        timeline.style.width = `${totalWidth}px`;
-
-        for (let year = startYear; year <= endYear; year++) {
-          const marker = document.createElement("div");
-          marker.className = "year-marker";
-          marker.style.left = `${
-            (year - startYear) * yearWidth + yearWidth / 2
-          }px`;
-          marker.textContent = year;
-          timeline.appendChild(marker);
+      // Function to check URL and toggle elements
+      function updateElementsBasedOnURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        let isExpanded = urlParams.get('expanded');
+        
+        if (isExpanded === null) {
+          elementsToHide.forEach(el => { 
+            el.style.display = '';
+          });
+        } else {
+          isExpanded = isExpanded === 'true';
+          elementsToHide.forEach(el => {
+            el.style.display = isExpanded ? '' : 'none';
+          });
         }
       }
 
-      function updateTimeline(smooth = true) {
-        const offset = (currentYear - startYear) * yearWidth;
-        timeline.style.transition = smooth
-          ? "transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)"
-          : "none";
-        timeline.style.transform = `translateX(${
-          -offset + timelineContainer.offsetWidth / 2 - yearWidth / 2
-        }px)`;
-        yearDisplay.textContent = Math.round(currentYear);
+      // 1. Check immediately on load
+      updateElementsBasedOnURL();
 
-        document.querySelectorAll(".year-marker").forEach((marker) => {
-          marker.classList.remove("active");
-          if (parseInt(marker.textContent) === Math.round(currentYear)) {
-            marker.classList.add("active");
-          }
-        });
-        function updateDropdownValue(year) {
+      // 2. Set up a more efficient way to detect URL changes
+      let lastURL = location.href;
+      
+      // Use the History API to detect changes
+      window.addEventListener('popstate', updateElementsBasedOnURL);
+      
+      // For programmatic URL changes that don't trigger popstate
+      const originalPushState = history.pushState;
+      history.pushState = function() {
+        originalPushState.apply(this, arguments);
+        updateElementsBasedOnURL();
+      };
+      
+      const originalReplaceState = history.replaceState;
+      history.replaceState = function() {
+        originalReplaceState.apply(this, arguments);
+        updateElementsBasedOnURL();
+      };
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+  const timeline = document.querySelector(".timeline");
+  const timelineContainer = document.querySelector(".timeline-container");
+  const selector = document.querySelector(".selector");
+  const artIframe = document.getElementById("art");
+
+  const actualCurrentYear = new Date().getFullYear();
+  let currentYear = Math.min(actualCurrentYear, 2035);
+  let startYear = 1967;
+  let endYear = 2035; // Set a default end year
+  const yearWidth = 120; // Width of each year marker in pixels
+  let isDragging = false;
+  let startX, scrollLeft;
+  let lastDragTime = 0;
+  const dragThrottle = 50; // Minimum time between drag updates in milliseconds
+
+  // Function to load available textures and extract years
+  async function loadAvailableTextures() {
+    try {
+      // For demo purposes, we'll create a range of years
+      // In a real app, you would fetch this data from your server
+      const years = [];
+      for (let year = 1967; year <= 2035; year++) {
+        years.push(year);
+      }
+      
+      return years;
+    } catch (error) {
+      console.error("Error loading textures:", error);
+      return [];
+    }
+  }
+
+  function createYearMarkers() {
+    timeline.innerHTML = "";
+    const totalWidth = yearWidth * (endYear - startYear + 1);
+    timeline.style.width = `${totalWidth}px`;
+
+    for (let year = startYear; year <= endYear; year++) {
+      const marker = document.createElement("div");
+      marker.className = "year-marker";
+      marker.style.left = `${(year - startYear) * yearWidth + yearWidth / 2}px`;
+      marker.textContent = year;
+      timeline.appendChild(marker);
+    }
+  }
+
+  function updateTimeline(smooth = true) {
+    const offset = (currentYear - startYear) * yearWidth;
+    timeline.style.transition = smooth
+      ? "transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1)"
+      : "none";
+    timeline.style.transform = `translateX(${
+      -offset + timelineContainer.offsetWidth / 2 - yearWidth / 2
+    }px)`;
+    
+    // Update year display
+    const roundedYear = Math.round(currentYear);
+
+    // Update active marker
+    document.querySelectorAll(".year-marker").forEach((marker) => {
+      marker.classList.remove("active");
+      if (parseInt(marker.textContent) === roundedYear) {
+        marker.classList.add("active");
+      }
+    });
+
+    // Update iframe source if needed
+    updateIframeSource(roundedYear);
+    updateDropdownValue(roundedYear)
+
+    // Add a pulsing effect to the selector
+    selector.style.transform = "translate(-50%, -50%) scale(1.1)";
+    setTimeout(() => {
+      selector.style.transform = "translate(-50%, -50%) scale(1)";
+    }, 150);
+  }
+
+  function updateDropdownValue(year) {
           const dropdown = document.getElementById("yearDropdown");
 
           try {
@@ -525,69 +484,79 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Update the dropdown with the current year
         updateDropdownValue(Math.round(currentYear));
+  function updateIframeSource(year) {
+    if (!artIframe) return;
+    
+    // Only update if the year is within valid range
+    if (year >= 2011 && year <= 2024) {
+      artIframe.src = `articles.html?year=${year}`;
+    } else {
+      // For years outside our data range, use a random year from our valid range
+      const validYear = Math.floor(Math.random() * (2024 - 2011 + 1)) + 2011;
+      artIframe.src = `articles.html?year=${validYear}`;
+    }
+  }
 
-        // Add a pulsing effect to the selector
-        selector.style.transform = "translate(-50%, -50%) scale(1.1)";
-        setTimeout(() => {
-          selector.style.transform = "translate(-50%, -50%) scale(1)";
-        }, 150);
-      }
+  function handleDragStart(e) {
+    isDragging = true;
+    startX = e.type.includes("mouse") ? e.pageX : e.touches[0].pageX;
+    timelineContainer.style.cursor = "grabbing";
+  }
 
-      function handleDragStart(e) {
-        isDragging = true;
-        startX = e.type.includes("mouse") ? e.pageX : e.touches[0].pageX;
-        scrollLeft = timeline.scrollLeft;
-        timelineContainer.style.cursor = "grabbing";
-      }
+  function handleDragEnd() {
+    if (!isDragging) return;
+    isDragging = false;
+    timelineContainer.style.cursor = "grab";
 
-      function handleDragEnd() {
-        if (!isDragging) return;
-        isDragging = false;
-        timelineContainer.style.cursor = "grab";
+    // Snap to the nearest year
+    currentYear = Math.round(currentYear);
+    updateTimeline(true);
+  }
 
-        // Snap to the nearest year
-        currentYear = Math.round(currentYear);
-        updateTimeline(true);
-      }
+  function handleDrag(e) {
+    if (!isDragging) return;
+    e.preventDefault();
 
-      function handleDrag(e) {
-        if (!isDragging) return;
-        e.preventDefault();
+    const currentTime = Date.now();
+    if (currentTime - lastDragTime < dragThrottle) return;
+    lastDragTime = currentTime;
 
-        const currentTime = Date.now();
-        if (currentTime - lastDragTime < dragThrottle) return;
-        lastDragTime = currentTime;
+    const x = e.type.includes("mouse") ? e.pageX : e.touches[0].pageX;
+    const walk = (startX - x) / yearWidth; // Adjust sensitivity
+    startX = x;
+    
+    let newYear = currentYear + walk;
 
-        const x = e.type.includes("mouse") ? e.pageX : e.touches[0].pageX;
-        const walk = (startX - x) / (yearWidth * 2); // Decreased sensitivity
-        let newYear = currentYear + walk;
+    // Clamp the year between start and end years
+    newYear = Math.max(startYear, Math.min(endYear, newYear));
 
-        // Clamp the year between start and end years
-        newYear = Math.max(startYear, Math.min(endYear, newYear));
+    if (newYear !== currentYear) {
+      currentYear = newYear;
+      updateTimeline(false);
+    }
+  }
 
-        if (newYear !== currentYear) {
-          currentYear = newYear;
-          updateTimeline(false);
-        }
-      }
+  // Add event listeners with proper cleanup
+  function addEventListeners() {
+    timelineContainer.addEventListener("mousedown", handleDragStart);
+    timelineContainer.addEventListener("touchstart", handleDragStart, { passive: false });
+    window.addEventListener("mouseup", handleDragEnd);
+    window.addEventListener("touchend", handleDragEnd);
+    window.addEventListener("mousemove", handleDrag);
+    window.addEventListener("touchmove", handleDrag, { passive: false });
+  }
 
-      timelineContainer.addEventListener("mousedown", handleDragStart);
-      timelineContainer.addEventListener("touchstart", handleDragStart);
-      window.addEventListener("mouseup", handleDragEnd);
-      window.addEventListener("touchend", handleDragEnd);
-      window.addEventListener("mousemove", handleDrag);
-      window.addEventListener("touchmove", handleDrag);
+  // Initialize timeline
+  loadAvailableTextures()
+    .then(() => {
+      createYearMarkers();
+      updateTimeline();
+      addEventListeners();
+    });
 
-      // Initialize timeline by loading available textures
-      loadAvailableTextures("output_images") // Replace with your actual folder path
-        .then(() => {
-          createYearMarkers(); // Create year markers based on loaded textures
-          updateTimeline(); // Update the timeline display
-        });
-
-      // Add resize event listener to keep the timeline centered
-      window.addEventListener("resize", () => updateTimeline());
-})
+  // Add resize event listener to keep the timeline centered
+  window.addEventListener("resize", () => updateTimeline());
+});
     </script>
   </body>
 </html>

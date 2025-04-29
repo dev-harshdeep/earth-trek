@@ -25,22 +25,11 @@
         margin: 0;
         padding: 0;
         font-family: "Roboto", sans-serif;
-        background-color: var(--background-color);
-        color: var(--text-color);
-        overflow-x: hidden;
-      }
-
-      body,
-      html {
-        margin: 0;
-        padding: 0;
-        font-family: "Roboto", sans-serif;
         background: url("https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3540&q=80")
           no-repeat center center fixed;
         background-size: cover;
         color: var(--text-color);
         overflow-x: hidden;
-        animation: moveBackground 30s linear infinite;
       }
 
       @keyframes moveBackground {
@@ -310,6 +299,161 @@
           padding: 2rem;
         }
       }
+
+      section.hero {
+        transform: none;
+        backdrop-filter: none;
+      }
+
+      .hero {
+        padding: 0;
+        height: 65vh;
+        width: 100%;
+        margin: 1rem 0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        position: relative;
+      }
+      
+      .hero.fixed {
+        width: 100vw;
+        height: 100vh;
+        z-index: 999;
+        top: 0;
+        left: 0;
+        margin: 0;
+        padding: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      
+      .frame {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        display: block;
+      }
+      
+      /* Wrapper - only visible on hover */
+      .hero > .wrapper {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+      
+      .hero:not(.fixed):hover > .wrapper {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      
+      /* Explore Button (text only) */
+      .wrapper button {
+        padding: 14px 32px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #fff;
+        background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+      }
+      
+      .wrapper button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+      }
+      
+      /* Close Button with CDN SVG */
+      .close {
+        display: none;
+        position: fixed;
+        top: 25px;
+        right: 25px;
+        background: rgba(255, 255, 255, 0.95);
+        border: none;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 1000;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+      }
+      
+      .close img {
+        width: 20px;
+        height: 20px;
+        pointer-events: none;
+      }
+      
+      .close:hover {
+        transform: scale(1.1);
+        background: rgba(255, 255, 255, 1);
+      }
+      
+      .hero.fixed > .close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .prevent-scroll {
+        overflow: hidden;
+      }
+
+      .frame-expanded {
+        position: fixed;
+        visibility: hidden;
+        opacity: 0;
+        z-index: 999; 
+        transition: all 0.7s ease-out;
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.11);
+      }
+      
+      .hero.fixed > .frame-expanded {
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+      
+      .hero.fixed > .frame {
+        visibility: hidden;
+        opacity: 0;
+      }
+      
+      .frame-expanded-content {
+        opacity: 0;
+        transition: opacity 0.3s ease-out;
+        transition-delay: 0.7s;
+        border: 0;
+        width: 100%;
+        height: 100%;
+      }
+      
+      .hero.fixed .frame-expanded-content {
+        opacity: 1;
+      }
+      
+      section#overview {
+        padding: 2rem 3rem;
+      }
     </style>
   </head>
 
@@ -327,195 +471,87 @@
     </header>
 
     <main>
-        <style>
-            section.hero {
-              transform:none;
-              backdrop-filter: none;
-            }
-
-            .hero {
-              padding: 0;
-              height: 65vh;
-              width: 100%;
-              margin: 1rem 0;
-              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-              border-radius: 8px;
-              position:relative;
-            }
-            
-            .hero.fixed {
-              width: 100vw;
-              height: 100vh;
-              z-index: 999;
-              top: 0;
-              left: 0;
-              margin: 0;
-              padding: 0;
-              border-radius: 0;
-              box-shadow: none;
-            }
-            
-            .frame {
-              width: 100%;
-              height: 100%;
-              border: 0;
-              display: block;
-            }
-            
-            /* Wrapper - only visible on hover */
-            .hero > .wrapper {
-              width: 100%;
-              height: 100%;
-              position: absolute;
-              top: 0;
-              left: 0;
-              opacity: 0;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              background: rgba(0, 0, 0, 0.3);
-              cursor: pointer;
-              pointer-events: none;
-            }
-            
-            .hero:not(.fixed):hover > .wrapper {
-              opacity: 1;
-              pointer-events: auto;
-            }
-            
-            /* Explore Button (text only) */
-            .wrapper button {
-              padding: 14px 32px;
-              font-size: 1.2rem;
-              font-weight: 600;
-              color: #fff;
-              background: linear-gradient(135deg, #3a7bd5, #00d2ff);
-              border: none;
-              border-radius: 50px;
-              cursor: pointer;
-              box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-              transition: all 0.3s ease;
-            }
-            
-            .wrapper button:hover {
-              transform: translateY(-3px);
-              box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-              background: linear-gradient(135deg, #00d2ff, #3a7bd5);
-            }
-            
-            /* Close Button with CDN SVG */
-            .close {
-              display: none;
-              position: fixed;
-              top: 25px;
-              right: 25px;
-              background: rgba(255, 255, 255, 0.95);
-              border: none;
-              width: 44px;
-              height: 44px;
-              border-radius: 50%;
-              cursor: pointer;
-              z-index: 1000;
-              box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
-              transition: all 0.3s ease;
-            }
-            
-            .close img {
-              width: 20px;
-              height: 20px;
-              pointer-events: none;
-            }
-            .close:hover {
-              transform: scale(1.1);
-              background: rgba(255, 255, 255, 1);
-            }
-            
-            .hero.fixed > .close {
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            }
-            
-            .prevent-scroll {
-              overflow: hidden;
-            }
-
-            .frame-expanded{
-              position:fixed;
-              visibility: hidden;
-              opacity:0;
-              z-index: 999; 
-              transition: all 0.7s ease-out;
-              backdrop-filter: blur(10px);
-              background: rgba(255, 255, 255, 0.11);
-            }
-            .hero.fixed > .frame-expanded{
-              top:0 !important;
-              left:0 !important;
-              width: 100% !important;
-              height: 100% !important;
-              opacity: 1 !important;
-              visibility: visible !important;
-            }
-            .hero.fixed > .frame{
-              visibility: hidden;
-              opacity:0;
-            }
-            .frame-expanded-content{
-              opacity:0;
-              transition: opacity 0.3s ease-out;
-              transition-delay: 0.7s;
-              border: 0;
-              width: 100%;
-              height: 100%;
-            }
-            .hero.fixed .frame-expanded-content{
-              opacity:1;
-            }
-            section#overview{
-              padding: 2rem 3rem;
-            }
-          </style>
       <script>
-        function expand() {
-          document.querySelector(".hero").classList.add("fixed");
-          document.querySelector("body").classList.add("prevent-scroll");
-          document.querySelector("html").classList.add("prevent-scroll");
-          document.querySelector("header").classList.add("expanded");
-          
-          const iframe = document.querySelector(".hero > .frame-expanded-content");
+        // Function to handle scroll events for header styling
+        function handleScroll() {
+          const header = document.getElementById('header');
+          if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+          } else {
+            header.classList.remove('scrolled');
+          }
         }
 
-        function shrink() {
-          document.querySelector(".hero").classList.remove("fixed");
-          document.querySelector("body").classList.remove("prevent-scroll");
-          document.querySelector("html").classList.remove("prevent-scroll");
-          document.querySelector("header").classList.remove("expanded");
-          const iframe = document.querySelector(".hero  .frame-expanded-content");
+        // Function to expand the hero section
+        function expand() {
+          const hero = document.querySelector(".hero");
+          const body = document.querySelector("body");
+          const html = document.querySelector("html");
+          const header = document.querySelector("header");
+          
+          hero.classList.add("fixed");
+          body.classList.add("prevent-scroll");
+          html.classList.add("prevent-scroll");
+          header.classList.add("expanded");
+          
+          // Update URL with expanded state
+          const url = new URL(window.location);
+          url.searchParams.set('expanded', 'true');
+          window.history.pushState({}, '', url);
         }
+
+        // Function to shrink the hero section
+        function shrink() {
+          const hero = document.querySelector(".hero");
+          const body = document.querySelector("body");
+          const html = document.querySelector("html");
+          const header = document.querySelector("header");
+          
+          hero.classList.remove("fixed");
+          body.classList.remove("prevent-scroll");
+          html.classList.remove("prevent-scroll");
+          header.classList.remove("expanded");
+          
+          // Update URL to remove expanded state
+          const url = new URL(window.location);
+          url.searchParams.delete('expanded');
+          window.history.pushState({}, '', url);
+        }
+
+        // Function to set the layout for the expanded frame
         function setLayout() {
           const preview = document.querySelector(".hero > .frame");
-          let previewReact = preview.getBoundingClientRect();
+          let previewRect = preview.getBoundingClientRect();
           const frameExpanded = document.querySelector(".hero .frame-expanded");
 
-          frameExpanded.style.top = `${previewReact.top}px`;
-          frameExpanded.style.left = `${previewReact.left}px`;
-          frameExpanded.style.width = `${previewReact.width}px`;
-          frameExpanded.style.height = `${previewReact.height}px`;
+          frameExpanded.style.top = `${previewRect.top}px`;
+          frameExpanded.style.left = `${previewRect.left}px`;
+          frameExpanded.style.width = `${previewRect.width}px`;
+          frameExpanded.style.height = `${previewRect.height}px`;
         }
+
+        // Add event listeners when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+          // Check URL parameters on load
+          const urlParams = new URLSearchParams(window.location.search);
+          if (urlParams.get('expanded') === 'true') {
+            expand();
+          }
+          
+          // Add scroll event listener
+          window.addEventListener('scroll', handleScroll);
+        });
       </script>
       <section class="hero">
-        <!-- <h1>EARTH TREK</h1>
-            <p>Exploring Our Changing Planet</p> -->
         <iframe class="frame" src="./explore.html?expanded=false" onload="setLayout()"></iframe>
-          <div class="wrapper"><button onclick="expand()">Explore</button></div>
-          
-          <div class="frame-expanded">
-            <iframe class="frame-expanded-content" src="./explore.html?expanded=true"></iframe>
-          </div>
-          <button class="close" onclick="shrink()" aria-label="Close">
-        <img src="https://img.icons8.com/?size=100&id=8112&format=png&color=000000" alt="Close">
-         </button>
+        <div class="wrapper"><button onclick="expand()">Explore</button></div>
+        
+        <div class="frame-expanded">
+          <iframe class="frame-expanded-content" src="./explore.html?expanded=true"></iframe>
+        </div>
+        <button class="close" onclick="shrink()" aria-label="Close">
+          <img src="https://img.icons8.com/?size=100&id=8112&format=png&color=000000" alt="Close">
+        </button>
       </section>
       
 
@@ -545,16 +581,16 @@
           change effectively.
         </p>
         <div class="explore-buttons">
-          <a href="{{ url_for('explore') }}">
+          <a href="explore.html">
             <button>Explore Earth</button>
           </a>
-          <a href="{{ url_for('quiz') }}">
+          <a href="quiz.html">
             <button>Explore Quiz</button>
           </a>
-          <a href="{{ url_for('blog') }}">
+          <a href="blog.html">
             <button>Explore Blogs</button>
           </a>
-          <a href="{{ url_for('game') }}">
+          <a href="game.html">
             <button>Explore Games</button>
           </a>
         </div>
@@ -573,111 +609,92 @@
       <section id="contact">
         <h2>Contact Our Team</h2>
         <ul class="user-list">
-          <li class="user">
-            <span>Harshdeep Joshi</span>
-            <a
-              href="https://www.linkedin.com/in/amanbani"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                src="https://img.icons8.com/fluent/48/000000/linkedin.png"
-                alt="LinkedIn"
-                class="linkedin-icon"
-              />
-            </a>
-          </li>
-          <li class="user">
-            <span>Harshit Rajput</span>
-            <a
-              href="https://www.linkedin.com/in/janesmith"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                src="https://img.icons8.com/fluent/48/000000/linkedin.png"
-                alt="LinkedIn"
-                class="linkedin-icon"
-              />
-            </a>
-          </li>
-          <li class="user">
-            <span>Himanshu Agrawal</span>
-            <a
-              href="https://www.linkedin.com/in/johndoe"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                src="https://img.icons8.com/fluent/48/000000/linkedin.png"
-                alt="LinkedIn"
-                class="linkedin-icon"
-              />
-            </a>
-          </li>
-          <li class="user">
-            <span>Aman Bani</span>
-            <a
-              href="https://www.linkedin.com/in/johndoe"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                src="https://img.icons8.com/fluent/48/000000/linkedin.png"
-                alt="LinkedIn"
-                class="linkedin-icon"
-              />
-            </a>
-          </li>
-          <li class="user">
-            <span>Abhilasha Bisht</span>
-            <a
-              href="https://www.linkedin.com/in/johndoe"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                src="https://img.icons8.com/fluent/48/000000/linkedin.png"
-                alt="LinkedIn"
-                class="linkedin-icon"
-              />
-            </a>
-          </li>
-          <li class="user">
-            <span>Rashmi Murari</span>
-            <a
-              href="https://www.linkedin.com/in/johndoe"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                src="https://img.icons8.com/fluent/48/000000/linkedin.png"
-                alt="LinkedIn"
-                class="linkedin-icon"
-              />
-            </a>
-          </li>
+            <li class="user">
+                <span>Harshdeep Joshi</span>
+                <a
+                    href="https://www.linkedin.com/in/harshdeep-joshi/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <img
+                        src="https://media.licdn.com/dms/image/v2/D5603AQHZ0kyiOrBJ7g/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1718259039583?e=1751500800&v=beta&t=B0cZikMXnh1eI_1r7TCZ7g4TX1xN42sS19r6f2k5EA4"
+                        alt="Harshdeep Joshi"
+                        class="profile-icon"
+                    />
+                </a>
+            </li>
+            <li class="user">
+                <span>Harshit Rajput</span>
+                <a
+                    href="https://www.linkedin.com/in/harshit-rajput20/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <img
+                    src="https://media.licdn.com/dms/image/v2/D4D03AQEdgVRgpwNdEQ/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1713018750052?e=1751500800&v=beta&t=dsxw94u2TEyrFQ7ZhAXo5fz-fKTEVSZ90RO_QJqMOaU"                        alt="Harshit Rajput"
+                        class="profile-icon"
+                    />
+                </a>
+            </li>
+            <li class="user">
+                <span>Himanshu Agrawal</span>
+                <a
+                    href="https://www.linkedin.com/in/himanshuagrawal184/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <img
+                    src="https://media.licdn.com/dms/image/v2/D5603AQHJ0WZu7rtNOw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1708877709936?e=1751500800&v=beta&t=S17doyjEEMUK_Df23Y64ViShAxXepkSx880P3Ck7l9w"                        alt="Himanshu Agrawal"
+                        class="profile-icon"
+                    />
+                </a>
+            </li>
+            <li class="user">
+                <span>Aman Bani</span>
+                <a
+                    href="https://www.linkedin.com/in/aman-bani-059476237/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <img
+                    src="https://media.licdn.com/dms/image/v2/D5603AQHgEvte0Pafqg/profile-displayphoto-shrink_200_200/B56ZUaF07bGoAc-/0/1739899491133?e=1751500800&v=beta&t=RlY4IqD6GC5DVuFLegfxmDWqTtQrHJJq48OlW1GWBVg"                        alt="Aman Bani"
+                        class="profile-icon"
+                    />
+                </a>
+            </li>
+            <li class="user">
+                <span>Abhilasha Bisht</span>
+                <a
+                    href="https://www.linkedin.com/in/abhilasha-bisht-646220272/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <img
+                    src="https://media.licdn.com/dms/image/v2/D5603AQH19mEhPqo_FQ/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1718489210975?e=1751500800&v=beta&t=6ny_OedbGTO9Xpf2HX1SgGnrn0v3StUpgYDtTW7LZKE"                        alt="Abhilasha Bisht"
+                        class="profile-icon"
+                    />
+                </a>
+            </li>
+            <li class="user">
+                <span>Rashmi Murari</span>
+                <a
+                    href="https://www.linkedin.com/in/rashmi-murari-b0011132b/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <img
+                    src="https://media.licdn.com/dms/image/v2/D5603AQGfsbIbUdI6fg/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1727204696111?e=1751500800&v=beta&t=G10uEaz5L0xMFzMZTMpaE8QULo5NGZ8K8zuBoOtxzWg"                        alt="Rashmi Murari"
+                        class="profile-icon"
+                    />
+                </a>
+            </li>
         </ul>
-      </section>
+    </section>
     </main>
 
     <footer>
       <p>© 2024 Earth Trek | All Rights Reserved</p>
-      <p>
-        Check out our research papers:
-        <a
-          href="https://www.climatereports.org"
-          target="_blank"
-          rel="noopener noreferrer"
-          >Climate Reports</a
-        >,
-        <a
-          href="https://www.nature.com/climate"
-          target="_blank"
-          rel="noopener noreferrer"
-          >Nature Climate</a
-        >
-      </p>
+    
     </footer>
    
   </body>

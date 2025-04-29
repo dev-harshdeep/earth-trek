@@ -111,6 +111,7 @@
         .blog-card.visible {
             opacity: 1;
             transform: translateY(0);
+            transition: opacity 0.5s ease, transform 0.5s ease;
         }
 
         .blog-card:hover {
@@ -129,6 +130,7 @@
             height: 40px;
             border-radius: 50%;
             margin-right: 1rem;
+            object-fit: cover;
         }
 
         .blog-title {
@@ -151,10 +153,46 @@
             font-size: 0.9rem;
             transition: color 0.3s;
             align-self: flex-start;
+            margin-top: auto;
+            padding: 0.5rem 0;
         }
 
         .read-more:hover {
             color: var(--primary-color);
+        }
+
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .category {
+            background-color: rgba(76, 201, 240, 0.2);
+            color: var(--primary-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(76, 201, 240, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         @media (max-width: 600px) {
@@ -171,9 +209,9 @@
     <header>
         <nav>
             <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="explore.html">Explore</a></li>
+                <li><a href="quiz.html">Quiz</a></li>
             </ul>
         </nav>
     </header>
@@ -183,6 +221,9 @@
         <div class="blog-grid" id="blogGrid">
             <!-- Blog cards will be dynamically inserted here -->
         </div>
+        <div class="loading-spinner" id="loadingSpinner">
+            <div class="spinner"></div>
+        </div>
     </main>
 
     <script>
@@ -191,51 +232,65 @@
                 title: "The Impact of Rising Sea Levels on Coastal Communities",
                 author: "Dr. Emma Waters",
                 excerpt: "As global temperatures continue to rise, coastal communities face unprecedented challenges. This article explores the latest research on sea level rise and its implications for millions of people worldwide.",
-                authorIcon: "https://i.pravatar.cc/150?img=1"
+                authorIcon: "https://i.pravatar.cc/150?img=1",
+                categories: ["Sea Level Rise", "Communities"]
             },
             {
                 title: "Innovative Technologies in Renewable Energy",
                 author: "Prof. Alan Green",
                 excerpt: "Discover the cutting-edge technologies that are revolutionizing the renewable energy sector. From advanced solar panels to next-generation wind turbines, these innovations are paving the way for a sustainable future.",
-                authorIcon: "https://i.pravatar.cc/150?img=2"
+                authorIcon: "https://i.pravatar.cc/150?img=2",
+                categories: ["Renewable Energy", "Technology"]
             },
             {
                 title: "The Role of Artificial Intelligence in Climate Modeling",
                 author: "Dr. Sarah Chen",
                 excerpt: "Artificial Intelligence is transforming the way we understand and predict climate change. Learn how machine learning algorithms are improving the accuracy of climate models and helping us prepare for future scenarios.",
-                authorIcon: "https://i.pravatar.cc/150?img=3"
+                authorIcon: "https://i.pravatar.cc/150?img=3",
+                categories: ["AI", "Climate Models"]
             },
             {
                 title: "Sustainable Agriculture: Feeding the World Without Harming the Planet",
                 author: "Dr. Michael Fields",
                 excerpt: "Explore the latest advancements in sustainable agriculture that are helping to feed a growing global population while minimizing environmental impact. From vertical farming to precision agriculture, the future of food is changing.",
-                authorIcon: "https://i.pravatar.cc/150?img=4"
+                authorIcon: "https://i.pravatar.cc/150?img=4",
+                categories: ["Agriculture", "Sustainability"]
             },
             {
                 title: "The Psychology of Climate Change: Why We Need to Act Now",
                 author: "Prof. Lisa Mind",
                 excerpt: "Understanding the psychological barriers to climate action is crucial for effective change. This article delves into the cognitive biases and social factors that influence our response to climate change and how to overcome them.",
-                authorIcon: "https://i.pravatar.cc/150?img=5"
+                authorIcon: "https://i.pravatar.cc/150?img=5",
+                categories: ["Psychology", "Behavior Change"]
             },
             {
                 title: "Ocean Acidification: The Silent Threat to Marine Ecosystems",
                 author: "Dr. Robert Coral",
                 excerpt: "As the oceans absorb more CO2, their chemistry is changing at an alarming rate. Discover the latest research on ocean acidification and its far-reaching consequences for marine life and global ecosystems.",
-                authorIcon: "https://i.pravatar.cc/150?img=6"
+                authorIcon: "https://i.pravatar.cc/150?img=6",
+                categories: ["Ocean Acidification", "Marine Life"]
             }
         ];
 
         function createBlogCard(blog) {
             const card = document.createElement('div');
             card.className = 'blog-card';
+            
+            // Create category tags HTML
+            const categoriesHTML = blog.categories ? 
+                `<div class="categories">
+                    ${blog.categories.map(cat => `<span class="category">${cat}</span>`).join('')}
+                </div>` : '';
+            
             card.innerHTML = `
                 <div class="blog-card-header">
-                    <img src="${blog.authorIcon}" alt="${blog.author}" class="author-icon">
+                    <img src="${blog.authorIcon}" alt="${blog.author}" class="author-icon" loading="lazy">
                     <div>
                         <div class="blog-title">${blog.title}</div>
                         <small>${blog.author}</small>
                     </div>
                 </div>
+                ${categoriesHTML}
                 <p class="blog-excerpt">${blog.excerpt}</p>
                 <a href="#" class="read-more">Read more →</a>
             `;
@@ -244,29 +299,50 @@
 
         function loadBlogCards() {
             const blogGrid = document.getElementById('blogGrid');
-            blogData.forEach(blog => {
-                const card = createBlogCard(blog);
-                blogGrid.appendChild(card);
-            });
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            
+            // Simulate loading delay
+            setTimeout(() => {
+                loadingSpinner.style.display = 'none';
+                
+                blogData.forEach(blog => {
+                    const card = createBlogCard(blog);
+                    blogGrid.appendChild(card);
+                });
+                
+                // Check visibility after cards are added
+                setTimeout(checkCardVisibility, 100);
+            }, 1000);
         }
 
         function checkCardVisibility() {
             const cards = document.querySelectorAll('.blog-card');
+            
+            // Use Intersection Observer for better performance
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        // Once the card is visible, we don't need to observe it anymore
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                root: null, // viewport
+                threshold: 0.1 // 10% of the item visible
+            });
+            
             cards.forEach(card => {
-                const rect = card.getBoundingClientRect();
-                const isVisible = (rect.top >= 0 && rect.bottom <= window.innerHeight);
-                if (isVisible) {
-                    card.classList.add('visible');
-                }
+                observer.observe(card);
             });
         }
 
-        window.addEventListener('load', loadBlogCards);
+        // Load blog cards when DOM is ready
+        document.addEventListener('DOMContentLoaded', loadBlogCards);
+        
+        // Handle scroll and resize events for animation
         window.addEventListener('scroll', checkCardVisibility);
         window.addEventListener('resize', checkCardVisibility);
-
-        // Initial check for card visibility
-        setTimeout(checkCardVisibility, 100);
     </script>
 </body>
 

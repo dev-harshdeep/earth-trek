@@ -40,7 +40,7 @@
         }
 
         header {
-            background: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+            background: rgba(0, 0, 0, 0.6);
             padding: 1rem;
             position: fixed;
             top: 0;
@@ -83,7 +83,7 @@
         }
 
         .quiz-container {
-            background: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+            background: rgba(0, 0, 0, 0.6);
             border-radius: 15px;
             padding: 2rem;
             backdrop-filter: blur(10px);
@@ -164,10 +164,32 @@
             transform: translateY(-2px);
         }
 
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .result {
             text-align: center;
             font-size: 1.5rem;
             margin-top: 2rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.5s ease;
         }
 
         @keyframes fadeIn {
@@ -188,13 +210,12 @@
 </head>
 
 <body>
-
     <header>
         <nav>
             <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="explore.html">Explore</a></li>
+                <li><a href="blog.html">Blog</a></li>
             </ul>
         </nav>
     </header>
@@ -202,6 +223,9 @@
     <main>
         <div class="quiz-container">
             <h1>Climate Change Quiz</h1>
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
             <div id="quiz">
                 <div class="question" id="question"></div>
                 <div class="options" id="options"></div>
@@ -219,32 +243,38 @@
             {
                 question: "What is the primary greenhouse gas responsible for climate change?",
                 options: ["Carbon dioxide", "Methane", "Water vapor", "Ozone"],
-                correct: 0
+                correct: 0,
+                explanation: "While all listed gases are greenhouse gases, carbon dioxide (CO2) is the primary contributor to human-caused climate change due to its abundance and long atmospheric lifetime."
             },
             {
                 question: "Which of the following is NOT a consequence of global warming?",
                 options: ["Rising sea levels", "Increased biodiversity", "More frequent extreme weather events", "Melting glaciers"],
-                correct: 1
+                correct: 1,
+                explanation: "Global warming generally leads to biodiversity loss, not increase, as many species cannot adapt quickly enough to changing conditions."
             },
             {
                 question: "What is the Paris Agreement?",
                 options: ["A trade deal between European countries", "An international treaty on climate change", "A space exploration program", "A global economic forum"],
-                correct: 1
+                correct: 1,
+                explanation: "The Paris Agreement is an international treaty adopted in 2015 that aims to limit global warming to well below 2°C above pre-industrial levels."
             },
             {
                 question: "Which sector contributes the most to global greenhouse gas emissions?",
                 options: ["Transportation", "Agriculture", "Energy production", "Manufacturing"],
-                correct: 2
+                correct: 2,
+                explanation: "Energy production, including electricity and heat generation, contributes the largest share of global greenhouse gas emissions."
             },
             {
                 question: "What is the term for the gradual increase in Earth's average temperature?",
                 options: ["Global warming", "Climate change", "Greenhouse effect", "Ozone depletion"],
-                correct: 0
+                correct: 0,
+                explanation: "Global warming specifically refers to the long-term heating of Earth's climate system observed since the pre-industrial period due to human activities."
             }
         ];
 
         let currentQuestion = 0;
         let score = 0;
+        let answeredQuestions = 0;
 
         const questionEl = document.getElementById('question');
         const optionsEl = document.getElementById('options');
@@ -252,6 +282,7 @@
         const nextBtn = document.getElementById('next');
         const quizEl = document.getElementById('quiz');
         const resultEl = document.getElementById('result');
+        const progressEl = document.getElementById('progress');
 
         function loadQuestion() {
             const question = quizData[currentQuestion];
@@ -268,6 +299,14 @@
 
             nextBtn.style.display = 'none';
             skipBtn.style.display = 'inline-block';
+            
+            // Update progress bar
+            updateProgressBar();
+        }
+
+        function updateProgressBar() {
+            const progress = (currentQuestion / quizData.length) * 100;
+            progressEl.style.width = `${progress}%`;
         }
 
         function selectOption(index) {
@@ -285,10 +324,32 @@
 
             if (index === question.correct) {
                 score++;
+                showExplanation(question.explanation, true);
+            } else {
+                showExplanation(question.explanation, false);
             }
 
+            answeredQuestions++;
             nextBtn.style.display = 'inline-block';
             skipBtn.style.display = 'none';
+        }
+
+        function showExplanation(explanation, isCorrect) {
+            const explanationDiv = document.createElement('div');
+            explanationDiv.classList.add('explanation');
+            explanationDiv.style.marginTop = '1rem';
+            explanationDiv.style.padding = '1rem';
+            explanationDiv.style.borderRadius = '5px';
+            explanationDiv.style.backgroundColor = isCorrect ? 'rgba(76, 175, 80, 0.2)' : 'rgba(244, 67, 54, 0.2)';
+            
+            explanationDiv.innerHTML = `
+                <strong>${isCorrect ? '67,54,0.2)';
+            
+            explanationDiv.innerHTML = `
+                <strong>${isCorrect ? 'Correct!' : 'Incorrect'}</strong>: ${explanation}
+            `;
+            
+            optionsEl.after(explanationDiv);
         }
 
         function nextQuestion() {
@@ -303,16 +364,62 @@
         function showResult() {
             quizEl.style.display = 'none';
             resultEl.style.display = 'block';
-            resultEl.textContent = `You scored ${score} out of ${quizData.length}!`;  // Correct template literal
+            
+            let message;
+            const percentage = (score / quizData.length) * 100;
+            
+            if (percentage >= 80) {
+                message = "Excellent! You're a climate change expert!";
+            } else if (percentage >= 60) {
+                message = "Good job! You have a solid understanding of climate change.";
+            } else if (percentage >= 40) {
+                message = "Not bad! You know some basics about climate change.";
+            } else {
+                message = "Keep learning! Climate change is an important topic.";
+            }
+            
+            resultEl.innerHTML = `
+                <h2>Quiz Complete!</h2>
+                <p>You scored ${score} out of ${quizData.length} (${percentage}%)</p>
+                <p>${message}</p>
+                <button id="restart-button">Take Quiz Again</button>
+            `;
+            
+            document.getElementById('restart-button').addEventListener('click', restartQuiz);
         }
         
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            answeredQuestions = 0;
+            resultEl.style.display = 'none';
+            quizEl.style.display = 'block';
+            loadQuestion();
+        }
 
         nextBtn.addEventListener('click', nextQuestion);
-        skipBtn.addEventListener('click', nextQuestion);
+        skipBtn.addEventListener('click', () => {
+            // Show the correct answer when skipping
+            const question = quizData[currentQuestion];
+            const options = optionsEl.children;
+            
+            for (let i = 0; i < options.length; i++) {
+                options[i].disabled = true;
+                if (i === question.correct) {
+                    options[i].classList.add('correct');
+                }
+            }
+            
+            showExplanation(question.explanation, false);
+            
+            nextBtn.style.display = 'inline-block';
+            skipBtn.style.display = 'none';
+            
+            // Wait for user to click next
+        });
 
+        // Initialize the quiz
         loadQuestion();
     </script>
-
 </body>
-
 </html>
