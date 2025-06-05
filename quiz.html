@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,15 +27,9 @@
         }
 
         @keyframes moveBackground {
-            0% {
-                background-position: 0 0;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0 100%;
-            }
+            0% { background-position: 0 0; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0 100%; }
         }
 
         header {
@@ -192,15 +185,6 @@
             transition: width 0.5s ease;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
-        }
-
         @media (max-width: 600px) {
             .options {
                 grid-template-columns: 1fr;
@@ -244,31 +228,31 @@
                 question: "What is the primary greenhouse gas responsible for climate change?",
                 options: ["Carbon dioxide", "Methane", "Water vapor", "Ozone"],
                 correct: 0,
-                explanation: "While all listed gases are greenhouse gases, carbon dioxide (CO2) is the primary contributor to human-caused climate change due to its abundance and long atmospheric lifetime."
+                explanation: "Carbon dioxide (CO2) is the primary contributor to human-caused climate change due to its abundance and long atmospheric lifetime."
             },
             {
                 question: "Which of the following is NOT a consequence of global warming?",
                 options: ["Rising sea levels", "Increased biodiversity", "More frequent extreme weather events", "Melting glaciers"],
                 correct: 1,
-                explanation: "Global warming generally leads to biodiversity loss, not increase, as many species cannot adapt quickly enough to changing conditions."
+                explanation: "Global warming generally leads to biodiversity loss, not an increase."
             },
             {
                 question: "What is the Paris Agreement?",
                 options: ["A trade deal between European countries", "An international treaty on climate change", "A space exploration program", "A global economic forum"],
                 correct: 1,
-                explanation: "The Paris Agreement is an international treaty adopted in 2015 that aims to limit global warming to well below 2°C above pre-industrial levels."
+                explanation: "The Paris Agreement is an international treaty adopted in 2015 that aims to limit global warming to well below 2°C."
             },
             {
                 question: "Which sector contributes the most to global greenhouse gas emissions?",
                 options: ["Transportation", "Agriculture", "Energy production", "Manufacturing"],
                 correct: 2,
-                explanation: "Energy production, including electricity and heat generation, contributes the largest share of global greenhouse gas emissions."
+                explanation: "Energy production, including electricity and heat generation, contributes the largest share."
             },
             {
                 question: "What is the term for the gradual increase in Earth's average temperature?",
                 options: ["Global warming", "Climate change", "Greenhouse effect", "Ozone depletion"],
                 correct: 0,
-                explanation: "Global warming specifically refers to the long-term heating of Earth's climate system observed since the pre-industrial period due to human activities."
+                explanation: "Global warming refers to the long-term heating of Earth’s climate system caused by human activities."
             }
         ];
 
@@ -287,8 +271,8 @@
         function loadQuestion() {
             const question = quizData[currentQuestion];
             questionEl.textContent = question.question;
-
             optionsEl.innerHTML = '';
+
             question.options.forEach((option, index) => {
                 const button = document.createElement('button');
                 button.textContent = option;
@@ -299,8 +283,6 @@
 
             nextBtn.style.display = 'none';
             skipBtn.style.display = 'inline-block';
-            
-            // Update progress bar
             updateProgressBar();
         }
 
@@ -335,20 +317,18 @@
         }
 
         function showExplanation(explanation, isCorrect) {
+            const existingExplanation = document.querySelector('.explanation');
+            if (existingExplanation) existingExplanation.remove();
+
             const explanationDiv = document.createElement('div');
             explanationDiv.classList.add('explanation');
             explanationDiv.style.marginTop = '1rem';
             explanationDiv.style.padding = '1rem';
             explanationDiv.style.borderRadius = '5px';
             explanationDiv.style.backgroundColor = isCorrect ? 'rgba(76, 175, 80, 0.2)' : 'rgba(244, 67, 54, 0.2)';
-            
-            explanationDiv.innerHTML = `
-                <strong>${isCorrect ? '67,54,0.2)';
-            
-            explanationDiv.innerHTML = `
-                <strong>${isCorrect ? 'Correct!' : 'Incorrect'}</strong>: ${explanation}
-            `;
-            
+            explanationDiv.style.color = '#fff';
+
+            explanationDiv.innerHTML = `<strong>${isCorrect ? 'Correct!' : 'Incorrect'}</strong>: ${explanation}`;
             optionsEl.after(explanationDiv);
         }
 
@@ -364,30 +344,27 @@
         function showResult() {
             quizEl.style.display = 'none';
             resultEl.style.display = 'block';
-            
-            let message;
+
             const percentage = (score / quizData.length) * 100;
-            
+            let message = "Keep learning! Climate change is an important topic.";
             if (percentage >= 80) {
                 message = "Excellent! You're a climate change expert!";
             } else if (percentage >= 60) {
                 message = "Good job! You have a solid understanding of climate change.";
             } else if (percentage >= 40) {
                 message = "Not bad! You know some basics about climate change.";
-            } else {
-                message = "Keep learning! Climate change is an important topic.";
             }
-            
+
             resultEl.innerHTML = `
                 <h2>Quiz Complete!</h2>
                 <p>You scored ${score} out of ${quizData.length} (${percentage}%)</p>
                 <p>${message}</p>
                 <button id="restart-button">Take Quiz Again</button>
             `;
-            
+
             document.getElementById('restart-button').addEventListener('click', restartQuiz);
         }
-        
+
         function restartQuiz() {
             currentQuestion = 0;
             score = 0;
@@ -399,26 +376,21 @@
 
         nextBtn.addEventListener('click', nextQuestion);
         skipBtn.addEventListener('click', () => {
-            // Show the correct answer when skipping
             const question = quizData[currentQuestion];
             const options = optionsEl.children;
-            
+
             for (let i = 0; i < options.length; i++) {
                 options[i].disabled = true;
                 if (i === question.correct) {
                     options[i].classList.add('correct');
                 }
             }
-            
+
             showExplanation(question.explanation, false);
-            
             nextBtn.style.display = 'inline-block';
             skipBtn.style.display = 'none';
-            
-            // Wait for user to click next
         });
 
-        // Initialize the quiz
         loadQuestion();
     </script>
 </body>
